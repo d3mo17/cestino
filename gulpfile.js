@@ -11,7 +11,7 @@ gulp.task('distribute', function () {
      * @param	{function} reject
      */
     function minify(resolve, reject) {
-        _optimize(resolve, 'uglify', 'Cestino.min.js', 'Minify');
+        _optimize(resolve, 'uglify', 'cestino.min.js', 'Minify');
     }
 
     /**
@@ -21,7 +21,7 @@ gulp.task('distribute', function () {
      * @param	{function} reject
      */
     function concat(resolve, reject) {
-        _optimize(resolve, 'none', 'Cestino.js', 'Concat');
+        _optimize(resolve, 'none', 'cestino.js', 'Concat');
     }
 
         /**
