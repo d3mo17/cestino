@@ -1,0 +1,58 @@
+var gulp = require('gulp'),
+    rjs = require('requirejs');
+
+gulp.task('distribute', function () {
+    return Promise.all([new Promise(concat), new Promise(minify)]);
+
+    /**
+     * Will operate the task given Promise for minification
+     *
+     * @param	{function} resolve
+     * @param	{function} reject
+     */
+    function minify(resolve, reject) {
+        _optimize(resolve, 'uglify', 'Cestino.min.js', 'Minify');
+    }
+
+    /**
+     * Will operate the task given Promise for concatenation
+     *
+     * @param	{function} resolve
+     * @param	{function} reject
+     */
+    function concat(resolve, reject) {
+        _optimize(resolve, 'none', 'Cestino.js', 'Concat');
+    }
+
+        /**
+         * @param {function} resolve
+         * @param {string} optimizeType
+         * @param {string} targetFile
+         * @param {string} whatHappens
+         * @private
+         */
+        function _optimize(resolve, optimizeType, targetFile, whatHappens) {
+            rjs.optimize({
+                optimize: optimizeType,
+
+                baseUrl: 'src',
+                paths: {
+                    'cestino': '.',
+                    'bluebird/js/browser/bluebird.core.min': 'empty:',
+                    'atomic/dist/atomic.min': 'empty:'
+                },
+                include: ['cestino/BasicCartService', 'cestino/Cart', 'cestino/PriceFormatter'],
+                out: 'dist/'+targetFile,
+                wrap: {
+                    end: "define(['cestino/Cart'], function (c) {\n    return c;\n});"
+                },
+
+                preserveLicenseComments:	false,
+                skipModuleInsertion:		true,
+                findNestedDependencies:		true
+            }, function (buildResponse) {
+                console.log(whatHappens, buildResponse);
+                resolve(buildResponse);
+            });
+        }
+});

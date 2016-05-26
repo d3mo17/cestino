@@ -1,0 +1,35 @@
+{
+  "name": "cestino",
+  "version": "0.9.1",
+  "authors": [
+    "Daniel Moritz <d.moritz@gmx.org>"
+  ],
+  "description": "A basic shopping cart implementation in javascript.",
+  "main": "src/Cart.js",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "shopping-cart",
+    "local",
+    "storage"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bluebird": "^3.3.4",
+    "atomic": "https://github.com/rekrut/atomic.git#master"
+  },
+  "devDependencies": {
+    "requirejs": "^2.2.0"
+  }
+}

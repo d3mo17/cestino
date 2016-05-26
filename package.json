@@ -1,0 +1,16 @@
+{
+  "name": "cestino",
+  "title": "cestino",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/rekrut/cestino.git"
+  },
+  "main": "./src/Cart.js",
+  "homepage": "",
+  "version": "0.9.0",
+  "devDependencies": {
+    "gulp": "~3.9.1",
+    "requirejs": "^2.2.0"
+  }
+}
