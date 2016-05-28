@@ -6,8 +6,8 @@ Object.keys(window.__karma__.files).forEach(function(file) {
   if (TEST_REGEXP.test(file)) {
     allTestFiles.push(
       // Normalize paths to RequireJS module names.
-	  file.replace(/^\/base\/test\//g, '../test/').replace(/\.js$/g, '')
-	);
+      file.replace(/^\/base\/test\//g, '../test/').replace(/\.js$/g, '')
+    );
   }
 });
 

@@ -7,29 +7,29 @@
  * @returns {Object}
  */
 (function (root, factory) {
-	if (typeof define === 'function' && define.amd) {
-		define('cestino/BasicCartService',['bluebird/js/browser/bluebird.core.min',
+    if (typeof define === 'function' && define.amd) {
+        define('cestino/BasicCartService',['bluebird/js/browser/bluebird.core.min',
             'atomic/dist/atomic.min'], factory);
-	} else if (typeof module === 'object' && module.exports) {
-		module.exports = factory(
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = factory(
             require('bluebird/js/browser/bluebird.core.min'),
             require('atomic/dist/atomic.min')
         );
-	} else {
+    } else {
         root.Cestino = root.Cestino || {};
-		root.Cestino.BasicCartService = factory(root.Promise, root.Atomic);
-	}
+        root.Cestino.BasicCartService = factory(root.Promise, root.Atomic);
+    }
 }(this, function (Promise, Atomic) {
-	"use strict";
+    "use strict";
 
     var defaults = {
         url: ''
     };
 
 
-	/**
-	 * BasicCartService-API
-	 */
+    /**
+     * BasicCartService-API
+     */
     BasicCartService.prototype = {
         getProductBasics:   _getProductBasics
     };
@@ -134,16 +134,16 @@
  * @returns {Object}
  */
 (function (root, factory) {
-	if (typeof define === 'function' && define.amd) {
-		define('cestino/Util',factory);
-	} else if (typeof module === 'object' && module.exports) {
-		module.exports = factory();
-	} else {
+    if (typeof define === 'function' && define.amd) {
+        define('cestino/Util',factory);
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = factory();
+    } else {
         root.Cestino = root.Cestino || {};
-		root.Cestino.Util = factory();
-	}
+        root.Cestino.Util = factory();
+    }
 }(this, function () {
-	"use strict";
+    "use strict";
 
     /**
      * Is Int?
@@ -871,16 +871,16 @@
  * @returns {Object}
  */
 (function (root, factory) {
-	if (typeof define === 'function' && define.amd) {
-		define('cestino/PriceFormatter',['cestino/Util'], factory);
-	} else if (typeof module === 'object' && module.exports) {
-		module.exports = factory(require('cestino/Util'));
-	} else {
+    if (typeof define === 'function' && define.amd) {
+        define('cestino/PriceFormatter',['cestino/Util'], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = factory(require('cestino/Util'));
+    } else {
         root.Cestino = root.Cestino || {};
-		root.Cestino.PriceFormatter = factory(root.Cestino.Util);
-	}
+        root.Cestino.PriceFormatter = factory(root.Cestino.Util);
+    }
 }(this, function (Util) {
-	"use strict";
+    "use strict";
 
     /**
      * @param   {String} decimalSeperator

@@ -1,5 +1,5 @@
 define(['cestino/Util'], function (Util) {
-	"use strict";
+    "use strict";
 
     describe('Utilities for common use', function () {
         it('should check integers', function () {

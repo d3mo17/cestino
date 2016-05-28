@@ -8,16 +8,16 @@
  * @returns {Object}
  */
 (function (root, factory) {
-	if (typeof define === 'function' && define.amd) {
-		define(['cestino/Util'], factory);
-	} else if (typeof module === 'object' && module.exports) {
-		module.exports = factory(require('cestino/Util'));
-	} else {
+    if (typeof define === 'function' && define.amd) {
+        define(['cestino/Util'], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = factory(require('cestino/Util'));
+    } else {
         root.Cestino = root.Cestino || {};
-		root.Cestino.PriceFormatter = factory(root.Cestino.Util);
-	}
+        root.Cestino.PriceFormatter = factory(root.Cestino.Util);
+    }
 }(this, function (Util) {
-	"use strict";
+    "use strict";
 
     /**
      * @param   {String} decimalSeperator

@@ -7,29 +7,29 @@
  * @returns {Object}
  */
 (function (root, factory) {
-	if (typeof define === 'function' && define.amd) {
-		define(['bluebird/js/browser/bluebird.core.min',
+    if (typeof define === 'function' && define.amd) {
+        define(['bluebird/js/browser/bluebird.core.min',
             'atomic/dist/atomic.min'], factory);
-	} else if (typeof module === 'object' && module.exports) {
-		module.exports = factory(
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = factory(
             require('bluebird/js/browser/bluebird.core.min'),
             require('atomic/dist/atomic.min')
         );
-	} else {
+    } else {
         root.Cestino = root.Cestino || {};
-		root.Cestino.BasicCartService = factory(root.Promise, root.Atomic);
-	}
+        root.Cestino.BasicCartService = factory(root.Promise, root.Atomic);
+    }
 }(this, function (Promise, Atomic) {
-	"use strict";
+    "use strict";
 
     var defaults = {
         url: ''
     };
 
 
-	/**
-	 * BasicCartService-API
-	 */
+    /**
+     * BasicCartService-API
+     */
     BasicCartService.prototype = {
         getProductBasics:   _getProductBasics
     };

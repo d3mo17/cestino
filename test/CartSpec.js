@@ -4,11 +4,11 @@ define(['../dist/cestino'], cartTest);
 define(['cestino/Cart', 'cestino/BasicCartService'], cartTest);
 
 function cartTest (Cart, Repo) {
-	"use strict";
+    "use strict";
 
     Repo = Repo || require('cestino/BasicCartService');
 	
-	var cart = Cart.create(),
+    var cart = Cart.create(),
         genProducts = [],
         positionIDs = [],
         actionsMap = {

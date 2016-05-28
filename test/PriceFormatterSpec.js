@@ -1,5 +1,5 @@
 define(['cestino/PriceFormatter'], function (Formatter) {
-	"use strict";
+    "use strict";
 
     var fm = Formatter.create(',', ' '), fm2, fm3;
 
