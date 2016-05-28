@@ -13,6 +13,7 @@
 	} else if (typeof module === 'object' && module.exports) {
 		module.exports = factory(require('cestino/Util'));
 	} else {
+        root.Cestino = root.Cestino || {};
 		root.Cestino.PriceFormatter = factory(root.Cestino.Util);
 	}
 }(this, function (Util) {

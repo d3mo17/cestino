@@ -16,6 +16,7 @@
             require('atomic/dist/atomic.min')
         );
 	} else {
+        root.Cestino = root.Cestino || {};
 		root.Cestino.BasicCartService = factory(root.Promise, root.Atomic);
 	}
 }(this, function (Promise, Atomic) {

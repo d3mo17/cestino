@@ -7,16 +7,20 @@
  * @returns {Object}
  */
 (function (root, factory) {
-    var helperRef;
+    var i, helperRef;
 
     if (typeof define === 'function' && define.amd) {
         define(['cestino/Util', 'cestino/BasicCartService'], function (u) { return factory(u, root); });
     } else if (typeof module === 'object' && module.exports) {
         module.exports = factory(require('cestino/Util'), root);
     } else {
-        helperRef = root.Cestino.Util;
-        root.Cestino = factory(helperRef, root);
-        root.Cestino.Util = helperRef;
+        helperRef = root.Cestino;
+        root.Cestino = factory(helperRef.Util, root);
+        for (i in helperRef) {
+            if (helperRef.hasOwnProperty(i)) {
+                root.Cestino[i] = helperRef[i];
+            }
+        }
     }
 }(this, function (Util, root) {
     "use strict";

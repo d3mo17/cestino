@@ -16,6 +16,7 @@
             require('atomic/dist/atomic.min')
         );
 	} else {
+        root.Cestino = root.Cestino || {};
 		root.Cestino.BasicCartService = factory(root.Promise, root.Atomic);
 	}
 }(this, function (Promise, Atomic) {
@@ -211,16 +212,20 @@
  * @returns {Object}
  */
 (function (root, factory) {
-    var helperRef;
+    var i, helperRef;
 
     if (typeof define === 'function' && define.amd) {
         define('cestino/Cart',['cestino/Util', 'cestino/BasicCartService'], function (u) { return factory(u, root); });
     } else if (typeof module === 'object' && module.exports) {
         module.exports = factory(require('cestino/Util'), root);
     } else {
-        helperRef = root.Cestino.Util;
-        root.Cestino = factory(helperRef, root);
-        root.Cestino.Util = helperRef;
+        helperRef = root.Cestino;
+        root.Cestino = factory(helperRef.Util, root);
+        for (i in helperRef) {
+            if (helperRef.hasOwnProperty(i)) {
+                root.Cestino[i] = helperRef[i];
+            }
+        }
     }
 }(this, function (Util, root) {
     "use strict";
@@ -871,6 +876,7 @@
 	} else if (typeof module === 'object' && module.exports) {
 		module.exports = factory(require('cestino/Util'));
 	} else {
+        root.Cestino = root.Cestino || {};
 		root.Cestino.PriceFormatter = factory(root.Cestino.Util);
 	}
 }(this, function (Util) {
@@ -966,6 +972,12 @@
 
 
 
-define(['cestino/Cart'], function (c) {
-    return c;
-});
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['cestino/Cart'], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = factory(require('cestino/Cart'));
+    }
+}(this, function (cart) {
+    return cart;
+}));

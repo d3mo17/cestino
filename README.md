@@ -27,13 +27,30 @@ A basic shopping cart implementation in javascript.
 <script src="js/cestino/dist/cestino.min.js"></script>
 
 <script>
-    var oCart = root.Cestino.create();
+    var oCart = Cestino.create();
     oCart.add(
-                                // id, title,         price
-        root.Cestino.createProduct(42, 'TestProduct', 499),
-        root.Cestino.createProductQuantity(2)
+                           // id, title,         price
+        Cestino.createProduct(42, 'TestProduct', 499),
+        Cestino.createProductQuantity(2)
     );
 </script>
+```
+
+### Development
+
+To make changes to the source and redistribute it, make a clone of the
+git repository and run bower afterwards.
+
+If you want to distribute your changes in the 'dist'-directory, you have
+install necessary node.js packages:
+```shell
+    $ npm install
+```
+
+Then use gulp:
+
+```shell
+    $ gulp distribute
 ```
 
 ## License

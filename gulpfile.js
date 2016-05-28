@@ -24,35 +24,42 @@ gulp.task('distribute', function () {
         _optimize(resolve, 'none', 'cestino.js', 'Concat');
     }
 
-        /**
-         * @param {function} resolve
-         * @param {string} optimizeType
-         * @param {string} targetFile
-         * @param {string} whatHappens
-         * @private
-         */
-        function _optimize(resolve, optimizeType, targetFile, whatHappens) {
-            rjs.optimize({
-                optimize: optimizeType,
+    /**
+     * @param {function} resolve
+     * @param {string} optimizeType
+     * @param {string} targetFile
+     * @param {string} whatHappens
+     * @private
+     */
+    function _optimize(resolve, optimizeType, targetFile, whatHappens) {
+        rjs.optimize({
+            optimize: optimizeType,
 
-                baseUrl: 'src',
-                paths: {
-                    'cestino': '.',
-                    'bluebird/js/browser/bluebird.core.min': 'empty:',
-                    'atomic/dist/atomic.min': 'empty:'
-                },
-                include: ['cestino/BasicCartService', 'cestino/Cart', 'cestino/PriceFormatter'],
-                out: 'dist/'+targetFile,
-                wrap: {
-                    end: "define(['cestino/Cart'], function (c) {\n    return c;\n});"
-                },
+            baseUrl: 'src',
+            paths: {
+                'cestino': '.',
+                'bluebird/js/browser/bluebird.core.min': 'empty:',
+                'atomic/dist/atomic.min': 'empty:'
+            },
+            include: ['cestino/BasicCartService', 'cestino/Cart', 'cestino/PriceFormatter'],
+            out: 'dist/'+targetFile,
+            wrap: {
+                end: ["(function (root, factory) {\n",
+                    "    if (typeof define === 'function' && define.amd) {\n",
+                    "        define(['cestino/Cart'], factory);\n",
+                    "    } else if (typeof module === 'object' && module.exports) {\n",
+                    "        module.exports = factory(require('cestino/Cart'));\n",
+                    "    }\n",
+                    "}(this, function (cart) {\n    return cart;\n}));\n"
+                ].join('')
+            },
 
-                preserveLicenseComments:	false,
-                skipModuleInsertion:		true,
-                findNestedDependencies:		true
-            }, function (buildResponse) {
-                console.log(whatHappens, buildResponse);
-                resolve(buildResponse);
-            });
-        }
+            preserveLicenseComments:	false,
+            skipModuleInsertion:		true,
+            findNestedDependencies:		true
+        }, function (buildResponse) {
+            console.log(whatHappens, buildResponse);
+            resolve(buildResponse);
+        });
+    }
 });
