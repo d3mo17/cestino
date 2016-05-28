@@ -1,6 +1,6 @@
 
-define(['../dist/Cestino.min'], cartTest);
-define(['../dist/Cestino'], cartTest);
+define(['../dist/cestino.min'], cartTest);
+define(['../dist/cestino'], cartTest);
 define(['cestino/Cart', 'cestino/BasicCartService'], cartTest);
 
 function cartTest (Cart, Repo) {
