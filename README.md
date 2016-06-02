@@ -94,8 +94,8 @@ Here comes the BasicCartService into play ...
 The data that will be send has following format:
 ```json
 {
-    3: [],
-   42: [] 
+    "3": [],
+   "42": [] 
 }
 ```
 It consists of key-value pairs, with product-ids as keys and arrays of
