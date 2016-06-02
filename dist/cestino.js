@@ -974,7 +974,7 @@
 
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
-        define(['cestino/Cart'], factory);
+        define(['cestino/Cart', 'cestino/BasicCartService', 'cestino/PriceFormatter'], factory);
     } else if (typeof module === 'object' && module.exports) {
         module.exports = factory(require('cestino/Cart'));
     }
