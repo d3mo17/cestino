@@ -134,6 +134,13 @@ Then use gulp:
     $ gulp distribute
 ```
 
+### Testing
+
+After installation of required node modules with npm, simply use command:
+```shell
+    $ npm test
+```
+
 ## License
 
 The MIT License (MIT)
