@@ -6,11 +6,20 @@
     "type": "git",
     "url": "http://github.com/rekrut/cestino.git"
   },
+  "scripts": { "test": "node_modules/karma/bin/karma start --singleRun" },
   "main": "./src/Cart.js",
   "homepage": "",
   "version": "0.9.3",
   "devDependencies": {
     "gulp": "~3.9.1",
+    "jasmine-core": "^2.5.2",
+    "jsdom": "^9.9.1",
+    "karma": "^1.4.0",
+    "karma-jasmine": "^1.1.0",
+    "karma-jsdom-launcher": "^5.0.0",
+    "karma-phantomjs-launcher": "^1.0.2",
+    "karma-requirejs": "^1.1.0",
+    "phantomjs": "^2.1.7",
     "requirejs": "^2.2.0"
   }
 }
