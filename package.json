@@ -1,15 +1,23 @@
 {
   "name": "cestino",
   "title": "cestino",
-  "description": "",
+  "description": "A basic shopping cart implementation in javascript.",
   "repository": {
     "type": "git",
-    "url": "http://github.com/rekrut/cestino.git"
+    "url": "git+https://github.com/rekrut/cestino.git"
   },
-  "scripts": { "test": "node_modules/karma/bin/karma start --singleRun" },
+  "scripts": {
+    "test": "node_modules/karma/bin/karma start --singleRun"
+  },
+  "directories": {
+    "test": "test"
+  },
   "main": "./src/Cart.js",
-  "homepage": "",
   "version": "0.9.3",
+  "dependencies": {
+    "atomic": "https://github.com/rekrut/atomic.git#master",
+    "bluebird": "^3.3.4"
+  },
   "devDependencies": {
     "gulp": "~3.9.1",
     "jasmine-core": "^2.5.2",
@@ -21,5 +29,15 @@
     "karma-requirejs": "^1.1.0",
     "phantomjs": "^2.1.7",
     "requirejs": "^2.2.0"
-  }
+  },
+  "keywords": [
+    "shopping",
+    "cart"
+  ],
+  "author": "Daniel Moritz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rekrut/cestino/issues"
+  },
+  "homepage": "https://github.com/rekrut/cestino#readme"
 }

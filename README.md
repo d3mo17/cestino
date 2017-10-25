@@ -16,7 +16,7 @@ A basic shopping cart implementation in javascript.
 ### Installation
 
 ```shell
-    $ bower install cestino --save
+    $ npm install cestino
 ```
 
 ### Examples
@@ -123,12 +123,7 @@ To make changes to the source and redistribute it, make a clone of the
 git repository and run bower afterwards.
 
 If you want to distribute your changes in the 'dist'-directory, you have
-install necessary node.js packages:
-```shell
-    $ npm install
-```
-
-Then use gulp:
+use gulp:
 
 ```shell
     $ gulp distribute
