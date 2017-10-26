@@ -24,7 +24,7 @@ A basic shopping cart implementation in javascript.
 ##### Create a new cart and add a product
 
 ```html
-<script src="bower_components/cestino/dist/cestino.min.js"></script>
+<script src="node_modules/cestino/dist/cestino.min.js"></script>
 
 <script>
     var oCart = Cestino.create(),
@@ -43,10 +43,10 @@ A basic shopping cart implementation in javascript.
 ##### Use cestino with AMD
 
 ```html
-<script src="bower_components/requirejs/require.js"></script>
+<script src="node_modules/requirejs/require.js"></script>
 
 <script>
-    require.config({baseUrl:'bower_components'});
+    require.config({baseUrl:'node_modules'});
 
     require(['cestino/dist/cestino.min'], function (Cestino) {
         var oCart = Cestino.create(),
@@ -77,10 +77,10 @@ carts constructor. By default this service is of type ```BasicCartService```.
 ##### Import from JSON and loading masterdata of products into cart
 
 ```html
-<script src="bower_components/requirejs/require.js"></script>
+<script src="node_modules/requirejs/require.js"></script>
 
 <script>
-    require.config({baseUrl:'bower_components'});
+    require.config({baseUrl:'node_modules'});
 
     require(['cestino/dist/cestino.min'], function (Cestino) {
         var oService = require('cestino/BasicCartService')
@@ -124,10 +124,10 @@ Example how the response data from server has to look like
 ### Custom cart service
 
 You can define and pass a custom service to enrich the product data to your
-needs. All you have to to is to define an object with a method named
+needs. All you have to do is to define an object with a method named
 ```setProductDataToCart``` that takes a cart instance as first parameter and
 returns an promise of type "Promises/A+".
-How to enrich the product data, see script "src/BasicCartService.js"
+How to enrich the product data, see script "src/BasicCartService.js".
 
 ### Development
 
