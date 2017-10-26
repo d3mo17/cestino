@@ -1,6 +1,6 @@
 
-define(['../dist/cestino.min'], cartTest);
-define(['../dist/cestino'], cartTest);
+define(['../../dist/cestino.min'], cartTest);
+define(['../../dist/cestino'], cartTest);
 define(['cestino/Cart', 'cestino/BasicCartService'], cartTest);
 
 function cartTest (Cart, Repo) {
@@ -155,7 +155,7 @@ function cartTest (Cart, Repo) {
         });
 
         it('Load cart from json', function (done) {
-            var options = {url: 'base/test/CartData.json'},
+            var options = {url: 'base/test/amd/CartData.json'},
                 repo = Repo.create(options),
                 cart = Cart.create(repo);
 

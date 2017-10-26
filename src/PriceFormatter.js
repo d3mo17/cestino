@@ -11,7 +11,7 @@
     if (typeof define === 'function' && define.amd) {
         define(['cestino/Util'], factory);
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(require('cestino/Util'));
+        module.exports = factory(require('./Util'));
     } else {
         root.Cestino = root.Cestino || {};
         root.Cestino.PriceFormatter = factory(root.Cestino.Util);

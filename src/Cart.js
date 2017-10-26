@@ -10,9 +10,11 @@
     var i, helperRef;
 
     if (typeof define === 'function' && define.amd) {
-        define(['cestino/Util', 'cestino/BasicCartService'], function (u) { return factory(u, root); });
+        define(['cestino/Util', 'cestino/BasicCartService'], function (u) {
+            return factory(u, root, 'cestino');
+        });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(require('cestino/Util'), root);
+        module.exports = factory(require('./Util'), root, '.');
     } else {
         helperRef = root.Cestino;
         root.Cestino = factory(helperRef.Util, root);
@@ -22,7 +24,7 @@
             }
         }
     }
-}(this, function (Util, root) {
+}(this, function (Util, root, modulePath) {
     "use strict";
 
     var INCOMPLETE_MARKER = '__INCOMPLETE__',
@@ -43,7 +45,7 @@
     function Cart(oService) {
         oService = oService ||
             'Cestino' in root && root.Cestino.BasicCartService.create() ||
-            require('cestino/BasicCartService').create();
+            require(modulePath + '/BasicCartService').create();
         if (typeof oService['setProductDataToCart'] !== 'function') {
             throw new TypeError([
                 'The service has to be able to find Products! ', "\n",
