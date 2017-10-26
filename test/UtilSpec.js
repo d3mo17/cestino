@@ -11,8 +11,10 @@ define(['cestino/Util'], function (Util) {
         it('should check emptiness', function () {
             expect(Util.isEmpty('')).toBe(true);
             expect(Util.isEmpty(0)).toBe(true);
+            expect(Util.isEmpty('0')).toBe(true);
             expect(Util.isEmpty(0.0)).toBe(true);
             expect(Util.isEmpty(null)).toBe(true);
+            expect(Util.isEmpty(false)).toBe(true);
             expect(Util.isEmpty('a')).toBe(false);
             expect(Util.isEmpty(1)).toBe(false);
             expect(Util.isEmpty(0.1)).toBe(false);

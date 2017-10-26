@@ -156,7 +156,7 @@ function cartTest (Cart, Repo) {
 
         it('Load cart from json', function (done) {
             var options = {url: 'base/test/CartData.json'},
-                repo = Repo.create(options);
+                repo = Repo.create(options),
                 cart = Cart.create(repo);
 
             cart.on('load', function () {

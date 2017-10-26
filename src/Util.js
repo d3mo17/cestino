@@ -34,7 +34,7 @@
      * @returns {Boolean}
      */
     function _isEmpty(val) {
-        return ! val || val === false;
+        return ! val || val === '0';
     }
 
     /**
