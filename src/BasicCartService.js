@@ -31,7 +31,7 @@
      * BasicCartService-API
      */
     BasicCartService.prototype = {
-        getProductBasics:   _getProductBasics
+        setProductDataToCart: _setProductDataToCart
     };
 
 
@@ -99,7 +99,7 @@
          * @returns {Promise}
          * @private
          */
-        function _getProductBasics(oCart) {
+        function _setProductDataToCart(oCart) {
             var that = this, data = {};
 
             oCart.walk(function (oPosition) {

@@ -31,7 +31,7 @@
      * BasicCartService-API
      */
     BasicCartService.prototype = {
-        getProductBasics:   _getProductBasics
+        setProductDataToCart: _setProductDataToCart
     };
 
 
@@ -99,7 +99,7 @@
          * @returns {Promise}
          * @private
          */
-        function _getProductBasics(oCart) {
+        function _setProductDataToCart(oCart) {
             var that = this, data = {};
 
             oCart.walk(function (oPosition) {
@@ -249,10 +249,10 @@
         oService = oService ||
             'Cestino' in root && root.Cestino.BasicCartService.create() ||
             require('cestino/BasicCartService').create();
-        if (typeof oService['getProductBasics'] !== 'function') {
+        if (typeof oService['setProductDataToCart'] !== 'function') {
             throw new TypeError([
                 'The service has to be able to find Products! ', "\n",
-                'Implement a function named "getProductBasics" that takes one argument of type ',
+                'Implement a function named "setProductDataToCart" that takes one argument of type ',
                 'Object. ', "\n", 'The keys of the object has to represent product-ids, the ',
                 'values has to be arrays of selected product-feature-ids.'
             ].join(''));
@@ -384,7 +384,7 @@
         });
 
         // notify load-listeners on promise resolve
-        this.oCartService.getProductBasics(this)
+        this.oCartService.setProductDataToCart(this)
             .then(function() {
                 that.listener.load.forEach(function (fnListener) {
                     fnListener(that);

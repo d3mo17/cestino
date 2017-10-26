@@ -65,12 +65,14 @@ A basic shopping cart implementation in javascript.
 </script>
 ```
 
-In both examples you see, that the method toJSON() will not include
-prices of products. This is because the prices could have been changed
-before we use the method fromJSON() to import a structure in an empty
-cart. The prices therefore are useless and have to be updated by the
-server on import.
-Here comes the BasicCartService into play ...
+Execute one of the examples above and you see that the method ```toJSON()```
+will not include prices or any other field of the product objects.
+Only the necessary business data will be include, to be able rebuilding
+the cart.
+Later, when passing the data returned by ```toJSON()``` into ```fromJSON```
+the cart will be rebuild. In that process the additional information to
+products will be fetched from a service object that can be passed to the
+carts constructor. By default this service is of type ```BasicCartService```.
 
 ##### Import from JSON and loading masterdata of products into cart
 
@@ -91,39 +93,45 @@ Here comes the BasicCartService into play ...
 </script>
 ```
 
-The data that will be send has following format:
+The data that will be send (in our example to "masterdata.json")
+has following format:
 ```json
 {
-    "3": [],
-   "42": [] 
+    "486": [],
+    "56": [] 
 }
 ```
 It consists of key-value pairs, with product-ids as keys and arrays of
 feature-ids as values.
 
-Example how the response data from server has to look like (masterdata.json)
+Example how the response data from server has to look like
+(data responsed by masterdata.json):
 ```json
 {
     "3": {
-        "title": "Test 1",
-        "price": 456,
+        "title": "TestProduct",
+        "price": 499,
         "features": []
     },
     "42": {
-        "title": "Test 2",
-        "price": 333,
+        "title": "TestProduct 2",
+        "price": 895,
         "features": []
     }
 }
 ```
 
+### Custom cart service
+
+You can define and pass a custom service to enrich the product data to your
+needs. All you have to to is to define an object with a method named
+```setProductDataToCart``` that takes a cart instance as first parameter and
+returns an promise of type "Promises/A+".
+How to enrich the product data, see script "src/BasicCartService.js"
+
 ### Development
 
-To make changes to the source and redistribute it, make a clone of the
-git repository and run bower afterwards.
-
-If you want to distribute your changes in the 'dist'-directory, you have
-use gulp:
+If you want to distribute your changes in the 'dist'-directory, you can use gulp:
 
 ```shell
     $ gulp distribute
