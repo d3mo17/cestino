@@ -69,7 +69,7 @@ Execute one of the examples above and you see that the method ```toJSON()```
 will not include prices or any other field of the product objects.
 Only the necessary business data will be include, to be able rebuilding
 the cart.
-Later, when passing the data returned by ```toJSON()``` into ```fromJSON```
+Later, when passing the data returned by ```toJSON()``` into ```fromJSON()```
 the cart will be rebuild. In that process the additional information to
 products will be fetched from a service object that can be passed to the
 carts constructor. By default this service is of type ```BasicCartService```.
