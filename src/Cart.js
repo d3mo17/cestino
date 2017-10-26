@@ -202,7 +202,7 @@
      */
     Cart.Product = function (id, title, price) {
         if (Util.isEmpty(id) || (typeof id !== 'string' && ! Util.isInt(id))) {
-            throw new RangeError('The product has to have an id of type string oe integer!');
+            throw new RangeError('The product has to have an id of type string or integer!');
         }
         if (Util.isEmpty(title) || typeof title !== 'string') {
             throw new RangeError('The product has to have a title of type string!');
