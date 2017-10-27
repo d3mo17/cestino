@@ -15,7 +15,7 @@
   "main": "./src/Cart.js",
   "version": "0.9.6",
   "dependencies": {
-    "atomic": "https://github.com/rekrut/atomic.git#master",
+    "atomicjs": "^3.2.1",
     "bluebird": "^3.3.4"
   },
   "devDependencies": {

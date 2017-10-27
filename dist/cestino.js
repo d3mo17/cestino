@@ -8,16 +8,15 @@
  */
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
-        define('cestino/BasicCartService',['bluebird/js/browser/bluebird.core.min',
-            'atomic/dist/atomic.min'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(
-            require('bluebird/js/browser/bluebird.core.min'),
-            require('atomic/dist/atomic.min')
+        define(
+            'cestino/BasicCartService',['bluebird/js/browser/bluebird.core.min', 'atomicjs/dist/atomic.min'],
+            factory
         );
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = factory(require('bluebird'), require('atomicjs'));
     } else {
         root.Cestino = root.Cestino || {};
-        root.Cestino.BasicCartService = factory(root.Promise, root.Atomic);
+        root.Cestino.BasicCartService = factory(root.Promise, root.atomic);
     }
 }(this, function (Promise, Atomic) {
     "use strict";
@@ -109,8 +108,7 @@
             });
 
             return new Promise(function (resolve, reject) {
-                Atomic.setContentType('application/json');
-                Atomic.post(that.options.url, {query: data})
+                Atomic.ajax({url: that.options.url, type: 'POST', data: data})
                     .error(reject)
                     .success(function(response) {
                         _mergeDataInCart.call(that, response, oCart);
