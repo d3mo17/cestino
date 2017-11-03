@@ -10,30 +10,22 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine', 'requirejs'],
+    frameworks: ['jasmine'],
 
 
     // list of files / patterns to load in the browser
     files: [
-      'test-main.js',
       {pattern: 'test/**/*.json', included: false},
-      {pattern: 'test/amd/**/*', included: false},
-      {pattern: 'src/**/*.js', included: false},
-      {pattern: 'dist/**/*.js', included: false},
-      {pattern: 'node_modules/atomicjs/dist/*.js', included: false},
-      {pattern: 'node_modules/bluebird/js/browser/*.js', included: false}
+      {pattern: 'node_modules/atomicjs/dist/atomic.min.js'},
+      {pattern: 'node_modules/bluebird/js/browser/bluebird.min.js'},
+      {pattern: 'dist/**/*.min.js'},
+      {pattern: 'test/global/**/*Spec.js'}
     ],
 
 
     // list of files to exclude
     exclude: [
     ],
-
-
-    // preprocess matching files before serving them to the browser
-    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-    },
 
 
     // test results reporter to use

@@ -9,7 +9,7 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         define(
-            'cestino/BasicCartService',['bluebird/js/browser/bluebird.core.min', 'atomicjs/dist/atomic.min'],
+            'cestino/BasicCartService',['bluebird/js/browser/bluebird.min', 'atomicjs/dist/atomic.min'],
             factory
         );
     } else if (typeof module === 'object' && module.exports) {
@@ -213,21 +213,19 @@
     var i, helperRef;
 
     if (typeof define === 'function' && define.amd) {
-        define('cestino/Cart',['cestino/Util', 'cestino/BasicCartService'], function (u) {
-            return factory(u, root, 'cestino');
-        });
+        define('cestino/Cart',['cestino/Util', 'cestino/BasicCartService'], factory);
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(require('./Util'), root, '.');
+        module.exports = factory(require('./Util'), require('./BasicCartService'));
     } else {
         helperRef = root.Cestino;
-        root.Cestino = factory(helperRef.Util, root);
+        root.Cestino = factory(helperRef.Util, helperRef.BasicCartService);
         for (i in helperRef) {
             if (helperRef.hasOwnProperty(i)) {
                 root.Cestino[i] = helperRef[i];
             }
         }
     }
-}(this, function (Util, root, modulePath) {
+}(this, function (Util, BasicCartService) {
     "use strict";
 
     var INCOMPLETE_MARKER = '__INCOMPLETE__',
@@ -246,9 +244,7 @@
      * @returns {Cart}
      */
     function Cart(oService) {
-        oService = oService ||
-            'Cestino' in root && root.Cestino.BasicCartService.create() ||
-            require(modulePath + '/BasicCartService').create();
+        oService = oService || BasicCartService.create();
         if (typeof oService['setProductDataToCart'] !== 'function') {
             throw new TypeError([
                 'The service has to be able to find Products! ', "\n",

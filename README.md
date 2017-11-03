@@ -126,7 +126,7 @@ Example how the response data from server has to look like
 You can define and pass a custom service to enrich the product data to your
 needs. All you have to do is to define an object with a method named
 ```setProductDataToCart``` that takes a cart instance as first parameter and
-returns an promise of type "Promises/A+".
+returns a promise of type "Promises/A+".
 How to enrich the product data, see script "src/BasicCartService.js".
 
 ### Development

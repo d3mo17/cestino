@@ -4,9 +4,9 @@ define(
         describe('Test whether', function () {
             it('lib atomic can be load and used', function (done) {
                 Atomic.ajax({url: 'base/test/CartData.json'})
-                    .error(fail)
+                    .error(done.fail)
                     .success(function(response) {
-                        expect(response).toBe({
+                        expect(response).toEqual({
                             "3": {
                                 "title": "Test 1",
                                 "price": 456,

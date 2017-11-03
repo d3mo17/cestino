@@ -9,7 +9,7 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         define(
-            ['bluebird/js/browser/bluebird.core.min', 'atomicjs/dist/atomic.min'],
+            ['bluebird/js/browser/bluebird.min', 'atomicjs/dist/atomic.min'],
             factory
         );
     } else if (typeof module === 'object' && module.exports) {
