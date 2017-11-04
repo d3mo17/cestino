@@ -44,13 +44,9 @@ gulp.task('distribute', function () {
             include: ['cestino/BasicCartService', 'cestino/Cart', 'cestino/PriceFormatter'],
             out: 'dist/'+targetFile,
             wrap: {
-                end: ["(function (root, factory) {\n",
-                    "    if (typeof define === 'function' && define.amd) {\n",
-                    "        define(['cestino/Cart', 'cestino/BasicCartService', 'cestino/PriceFormatter'], factory);\n",
-                    "    } else if (typeof module === 'object' && module.exports) {\n",
-                    "        module.exports = factory(require('cestino/Cart'));\n",
-                    "    }\n",
-                    "}(this, function (cart) {\n    return cart;\n}));\n"
+                end: ["if (typeof define === 'function' && define.amd) {\n",
+                    "    define(['cestino/Cart'], function (Cart) { return Cart; });\n",
+                    "}\n"
                 ].join('')
             },
 

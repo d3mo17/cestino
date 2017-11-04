@@ -16,7 +16,9 @@ require.config({
   baseUrl: '/base/node_modules',
 
   paths: {
-      cestino: '../src'
+      cestino: '../src',
+      cestinoBundle: '../dist/cestino',
+      cestinoBundleMin: '../dist/cestino.min'
   },
 
   // dynamically load all test files

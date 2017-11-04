@@ -46,12 +46,12 @@ A basic shopping cart implementation in javascript.
 <script src="node_modules/requirejs/require.js"></script>
 
 <script>
-    require.config({baseUrl:'node_modules'});
+    require.config({baseUrl: 'node_modules'});
 
     require(['cestino/dist/cestino.min'], function (Cestino) {
         var oCart = Cestino.create(),
             // use comma as separator for decimal digits
-            oFormatter = require('cestino/PriceFormatter').create(',');
+            oFormatter = Cestino.PriceFormatter.create(',');
 
         oCart.add(
                                 // id, title,         price
@@ -80,11 +80,10 @@ carts constructor. By default this service is of type ```BasicCartService```.
 <script src="node_modules/requirejs/require.js"></script>
 
 <script>
-    require.config({baseUrl:'node_modules'});
+    require.config({baseUrl: 'node_modules'});
 
     require(['cestino/dist/cestino.min'], function (Cestino) {
-        var oService = require('cestino/BasicCartService')
-                            .create({'url':'masterdata.json'}),
+        var oService = Cestino.BasicCartService.create({'url':'masterdata.json'}),
             oCart = Cestino.create(oService);
 
         // import json e. g. fetched from localstorage

@@ -10,19 +10,20 @@
     var i, helperRef;
 
     if (typeof define === 'function' && define.amd) {
-        define(['cestino/Util', 'cestino/BasicCartService'], factory);
+        define(
+            ['cestino/Util', 'cestino/BasicCartService', 'cestino/PriceFormatter'],
+            factory
+        );
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(require('./Util'), require('./BasicCartService'));
+        module.exports = factory(
+            require('./Util'), require('./BasicCartService'), require('./PriceFormatter')
+        );
     } else {
-        helperRef = root.Cestino;
-        root.Cestino = factory(helperRef.Util, helperRef.BasicCartService);
-        for (i in helperRef) {
-            if (helperRef.hasOwnProperty(i)) {
-                root.Cestino[i] = helperRef[i];
-            }
-        }
+        root.Cestino = factory(
+            root.Cestino.Util, root.Cestino.BasicCartService, root.Cestino.PriceFormatter
+        );
     }
-}(this, function (Util, BasicCartService) {
+}(this, function (Util, BasicCartService, PriceFormatter) {
     "use strict";
 
     var INCOMPLETE_MARKER = '__INCOMPLETE__',
@@ -650,6 +651,9 @@
         },
         createProductQuantity: function (amount, dimX, dimY, dimZ) {
             return new Cart.ProductQuantity(amount, dimX, dimY, dimZ);
-        }
+        },
+        Util: Util,
+        PriceFormatter: PriceFormatter,
+        BasicCartService: BasicCartService
     };
 }));

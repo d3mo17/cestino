@@ -1,4 +1,13 @@
-define(['cestino/PriceFormatter'], function (Formatter) {
+
+define(['cestinoBundleMin'], formatterInBundleTest);
+// define(['cestinoBundle'], formatterInBundleTest);
+define(['cestino/PriceFormatter'], priceFormatterTest);
+
+function formatterInBundleTest(Cestino) {
+    priceFormatterTest(Cestino.PriceFormatter);
+}
+
+function priceFormatterTest(Formatter) {
     "use strict";
 
     var fm = Formatter.create(',', ' '), fm2, fm3;
@@ -33,4 +42,4 @@ define(['cestino/PriceFormatter'], function (Formatter) {
             expect(function () { fm.format('#43'); }).toThrowError(TypeError);
         });
     });
-});
+}

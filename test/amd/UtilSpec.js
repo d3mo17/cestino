@@ -1,4 +1,14 @@
-define(['cestino/Util'], function (Util) {
+
+define(['cestinoBundleMin'], utilWithBundleTest);
+// define(['cestinoBundle'], utilWithBundleTest);
+define(['cestino/Util'], utilTest);
+
+function utilWithBundleTest(Cestino) {
+    utilTest(Cestino.Util);
+    return {};
+}
+
+function utilTest(Util) {
     "use strict";
 
     describe('Utilities for common use', function () {
@@ -32,4 +42,4 @@ define(['cestino/Util'], function (Util) {
             expect(Util.lpad('tst', 6, '+-+')).toBe('+-+tst');
         });
     });
-});
+}
