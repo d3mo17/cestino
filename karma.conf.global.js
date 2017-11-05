@@ -15,6 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      {pattern: 'test/*Share.js'},
       {pattern: 'test/**/*.json', included: false},
       {pattern: 'node_modules/atomicjs/dist/atomic.min.js'},
       {pattern: 'node_modules/bluebird/js/browser/bluebird.min.js'},

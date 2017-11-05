@@ -15,6 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      {pattern: 'test/*Share.js'},
       {pattern: 'test/**/*.json', included: false},
       {pattern: 'test/cjs-browserify/**/*Spec.js'},
       {pattern: 'src/**/*.js', included: false},
