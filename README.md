@@ -157,7 +157,7 @@ Example:
         return this.dimensionX * this.dimensionY;
     }
 
-    InchQuantity = Cart.extendProductQuantity(ProductQuantityInInch);
+    InchQuantity = Cestino.extendProductQuantity(ProductQuantityInInch);
         
     oCart.add(
                            // id, title,         price
