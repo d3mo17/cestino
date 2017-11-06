@@ -56,7 +56,11 @@ A basic shopping cart implementation in javascript.
         oCart.add(
                                 // id, title,         price
             Cestino.createProduct(486, 'TestProduct', 499),
-            Cestino.createProductQuantity(2)
+            Cestino.createProductQuantity(2),
+            null /* group of position */, [
+                Cestino.createProductFeature(2, 'color: orange', 0),
+                Cestino.createProductFeature(5, 'size: medium', 120)
+            ]
         );
         oCart.add(Cestino.createProduct(56, 'TestProduct 2', 895));
 
@@ -96,7 +100,7 @@ The data that will be send (in our example to "masterdata.json")
 has following format:
 ```json
 {
-    "486": [],
+    "486": [2, 5],
     "56": [] 
 }
 ```
@@ -107,15 +111,18 @@ Example how the response data from server has to look like
 (data responsed by masterdata.json):
 ```json
 {
-    "3": {
+    "486": {
         "title": "TestProduct",
         "price": 499,
-        "features": []
+        "features": {
+            "2": {"title": "color: orange", "price": 0},
+            "5": {"title": "size: medium", "price": 120} 
+        }
     },
-    "42": {
+    "56": {
         "title": "TestProduct 2",
         "price": 895,
-        "features": []
+        "features": {}
     }
 }
 ```
