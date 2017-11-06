@@ -638,6 +638,37 @@
             return (this.product.price + nFeaturePrice) * this.quantity.getFactor();
         }
 
+
+    /**
+     * Extends the constructor passed implicit (as this reference).
+     * 
+     * @param {*} subclassConstructor 
+     * @private
+     */
+    function _extendWith(subclassConstructor) {
+        var key,
+            parentConstructor = this,
+            subclassProto = subclassConstructor.prototype;
+
+        subclassConstructor.prototype = Object.create(this.prototype);
+        subclassConstructor.prototype.constructor = subclassConstructor;
+
+        for (key in subclassProto) {
+            if (Object.prototype.hasOwnProperty.call(subclassProto, key)) {
+                subclassConstructor.prototype[key] = subclassProto[key];
+            }
+        }
+
+        return {
+            create: function () {
+                var subclassObject = Object.create(subclassConstructor.prototype);
+                parentConstructor.apply(subclassObject, arguments);
+                subclassConstructor.apply(subclassObject, arguments);
+                return subclassObject;
+            }
+        };
+    }
+
     // Module-API
     return {
         create: function (oService) {
@@ -654,6 +685,9 @@
         },
         Util: Util,
         PriceFormatter: PriceFormatter,
-        BasicCartService: BasicCartService
+        BasicCartService: BasicCartService,
+        extendProduct: _extendWith.bind(Cart.Product),
+        extendProductFeature: _extendWith.bind(Cart.ProductFeature),
+        extendProductQuantity: _extendWith.bind(Cart.ProductQuantity)
     };
 }));

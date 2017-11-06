@@ -171,5 +171,44 @@ function cartTest (Cart, Repo) {
                 done();
             }, 3000);
         });
+
+        it('extend product objects', function () {
+            var Product, Quantity, p, q;
+
+            function ExtendedProduct(id, title, price, imgSrc) {
+                this.imgSrc = imgSrc;
+            }
+            ExtendedProduct.prototype.getImg = function () {
+                return this.imgSrc;
+            };
+
+            Product = Cart.extendProduct(ExtendedProduct);
+
+            p = Product.create(12, 'Test extended', 595, '/thumbs/test.png');
+            expect(p.id).toBe(12);
+            expect(p.getImg()).toBe('/thumbs/test.png');
+            expect(JSON.stringify(p)).toEqual(JSON.stringify({
+                id: 12,
+                title: 'Test extended',
+                price: 595,
+                imgSrc: '/thumbs/test.png'
+            }));
+
+            function ExtendedProductQuantity(amount, dimX, dimY, dimZ, unit) {
+                this.unit = unit;
+            }
+            ExtendedProductQuantity.prototype.getCubicUnit = function() {
+                return (this.dimensionX * this.dimensionY * this.dimensionZ)
+                    + ' ' + this.unit + '³';
+            }
+
+            Quantity = Cart.extendProductQuantity(ExtendedProductQuantity);
+
+            q = Quantity.create(5, 60, 125, 241, 'cm');
+            expect(q.getCubicUnit()).toBe((60*125*241) + ' cm³');
+            expect(q.getFactor()).toBe(5*60*125*241);
+
+            cart.add(p, q);
+        });
 	});
 }

@@ -128,6 +128,46 @@ needs. All you have to do is to define an object with a method named
 returns a promise of type "Promises/A+".
 How to enrich the product data, see script "src/BasicCartService.js".
 
+### Extending the model
+
+If you want to extend the model classes, you can use the methods ```extendProduct```,
+```extendProductFeature``` and ```extendProductQuantity```.
+These methods will return an objects with a method named ```create```, so you can
+use your subclasses like the classes shipped with Cestino.
+Note that your extending constructors do not need to have any arguments, the
+parent constructor will be called automatically. But when you need more arguments
+then the constructor of extended class has, your constructor has to define all
+the parent constructor arguments of the extended class first.
+
+Example:
+```html
+<script src="node_modules/cestino/dist/cestino.min.js"></script>
+
+<script>
+    var InchQuantity,
+        oCart = Cestino.create(),
+        // use point as separator for decimal digits
+        oFormatter = Cestino.PriceFormatter.create('.');
+
+
+    function ProductQuantityInInch() {
+        this.unit = 'inch';
+    }
+    ProductQuantityInInch.prototype.getBaseArea = function () {
+        return this.dimensionX * this.dimensionY;
+    }
+
+    InchQuantity = Cart.extendProductQuantity(ProductQuantityInInch);
+        
+    oCart.add(
+                           // id, title,         price
+        Cestino.createProduct(42, 'TestProduct', 499),
+        InchQuantity.create(2, 3, 4, 5)
+    );
+    console.log(oFormatter.format(oCart.calculate()), oCart.toJSON());
+</script>
+```
+
 ### Development
 
 If you want to distribute your changes in the 'dist'-directory, you can use gulp:
