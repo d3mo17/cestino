@@ -13,7 +13,7 @@
     "test": "test"
   },
   "main": "./src/Cart.js",
-  "version": "0.9.8",
+  "version": "1.0.0",
   "dependencies": {
     "atomicjs": "^3.2.1",
     "bluebird": "^3.3.4"
