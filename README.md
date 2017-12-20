@@ -139,12 +139,13 @@ How to enrich the product data, see script "src/BasicCartService.js".
 
 If you want to extend the model classes, you can use the methods ```extendProduct```,
 ```extendProductFeature``` and ```extendProductQuantity```.
-These methods will return an objects with a method named ```create```, so you can
+These methods will return an object with a method named ```create```, so you can
 use your subclasses like the classes shipped with Cestino.
 Note that your extending constructors do not need to have any arguments, the
 parent constructor will be called automatically. But when you need more arguments
-then the constructor of extended class has, your constructor has to define all
-the parent constructor arguments of the extended class first.
+than the constructor of extended class has, your constructor has to define all
+the parent constructor arguments of the extended class first followed then by your
+own arguments.
 
 Example:
 ```html
@@ -152,26 +153,41 @@ Example:
 
 <script>
     var InchQuantity,
+        DescribedProduct,
         oCart = Cestino.create(),
         // use point as separator for decimal digits
         oFormatter = Cestino.PriceFormatter.create('.');
 
-
+    /**
+     * Your product quantity extension
+     */
     function ProductQuantityInInch() {
         this.unit = 'inch';
     }
     ProductQuantityInInch.prototype.getBaseArea = function () {
         return this.dimensionX * this.dimensionY;
     }
-
     InchQuantity = Cestino.extendProductQuantity(ProductQuantityInInch);
         
+    /**
+     * Your product extension with additional parameter in constructor
+     */
+    function ProductWithDescription(id, title, price, description) {
+        this.description = description;
+    }
+    DescribedProduct = Cestino.extendProduct(ProductWithDescription);
+
     oCart.add(
-                           // id, title,         price
-        Cestino.createProduct(42, 'TestProduct', 499),
+        DescribedProduct.create(42, 'TestProduct', 499, 'This is a test product.'),
         InchQuantity.create(2, 3, 4, 5)
     );
-    console.log(oFormatter.format(oCart.calculate()), oCart.toJSON());
+    
+    console.log(
+        oFormatter.format(oCart.calculate()),
+        oCart.toJSON(),
+        oCart.getPositionById('p1').product,
+        oCart.getPositionById('p1').quantity
+    );
 </script>
 ```
 

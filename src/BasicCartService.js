@@ -44,7 +44,7 @@
     function BasicCartService(options) {
         var attr;
         
-        // clone defaults ... (Does only works with plain objects, don't use it e. g. to clone
+        // clone defaults ... (Does only work with plain objects, don't use it e. g. to clone
         // Date-object values)
         this.options = JSON.parse(JSON.stringify(defaults));
         for (attr in options) {
@@ -54,6 +54,7 @@
 
         /**
          * Merges object-data in the shopping cart.
+         * 
          * @param   {Object} data
          * @param   {Cart} oCart
          * @returns {undefined}
