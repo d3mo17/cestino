@@ -164,8 +164,9 @@ Example:
     function ProductQuantityInInch() {
         this.unit = 'inch';
     }
-    ProductQuantityInInch.prototype.getBaseArea = function () {
-        return this.dimensionX * this.dimensionY;
+    ProductQuantityInInch.prototype.getFactor = function () {
+        // calculate inch price instead of centimeter price
+        return this.amount * this.dimensionX * this.dimensionY * this.dimensionZ * 2.54;
     }
     InchQuantity = Cestino.extendProductQuantity(ProductQuantityInInch);
         
@@ -181,9 +182,9 @@ Example:
         DescribedProduct.create(42, 'TestProduct', 499, 'This is a test product.'),
         InchQuantity.create(2, 3, 4, 5)
     );
-    
+
     console.log(
-        oFormatter.format(oCart.calculate()),
+        oFormatter.format(Math.round(oCart.calculate(), 10)),
         oCart.toJSON(),
         oCart.getPositionById('p1').product,
         oCart.getPositionById('p1').quantity
