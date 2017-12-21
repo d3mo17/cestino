@@ -166,7 +166,10 @@ Example:
     }
     ProductQuantityInInch.prototype.getFactor = function () {
         // calculate inch price instead of centimeter price
-        return this.amount * this.dimensionX * this.dimensionY * this.dimensionZ * 2.54;
+        return this.amount * Math.round(
+            this.dimensionX * this.dimensionY * this.dimensionZ * Math.pow(2.54, 3),
+            10
+        );
     }
     InchQuantity = Cestino.extendProductQuantity(ProductQuantityInInch);
         
@@ -184,7 +187,7 @@ Example:
     );
 
     console.log(
-        oFormatter.format(Math.round(oCart.calculate(), 10)),
+        oFormatter.format(oCart.calculate()),
         oCart.toJSON(),
         oCart.getPositionById('p1').product,
         oCart.getPositionById('p1').quantity
