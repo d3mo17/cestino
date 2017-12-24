@@ -23,13 +23,13 @@ describe('Testing CommonJS', function () {
             
         oCart.add(
                             // id, title,         price
-            Cestino.createProduct(3, 'TestProduct 1', 195),
-            Cestino.createProductQuantity(4),
+            Cestino.Product.create(3, 'TestProduct 1', 195),
+            Cestino.ProductQuantity.create(4),
             'test'
         );
         oCart.add(
-            Cestino.createProduct(42, 'TestProduct 2', 499),
-            Cestino.createProductQuantity(1),
+            Cestino.Product.create(42, 'TestProduct 2', 499),
+            Cestino.ProductQuantity.create(1),
             'test'
         );
 

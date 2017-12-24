@@ -642,7 +642,7 @@
     /**
      * Extends the constructor passed implicit (as this reference).
      * 
-     * @param {*} subclassConstructor 
+     * @param {*} subclassConstructor
      * @private
      */
     function _extendWith(subclassConstructor) {
@@ -669,25 +669,54 @@
         };
     }
 
+    /**
+     * Creates a factory to instanciate a new object of passed type.
+     * 
+     * @param {string} kind Type of object to create
+     * @private
+     */
+    function _createFactory(kind) {
+        return function () {
+            return new Cart[kind](
+                typeof arguments[0] !== 'undefined' && arguments[0] || undefined,
+                typeof arguments[1] !== 'undefined' && arguments[1] || undefined,
+                typeof arguments[2] !== 'undefined' && arguments[2] || undefined,
+                typeof arguments[3] !== 'undefined' && arguments[3] || undefined
+            );
+        }
+    }
+
     // Module-API
     return {
         create: function (oService) {
             return new Cart(oService);
         },
-        createProduct: function (id, title, price) {
-            return new Cart.Product(id, title, price);
-        },
-        createProductFeature: function (id, label, price) {
-            return new Cart.ProductFeature(id, label, price);
-        },
-        createProductQuantity: function (amount, dimX, dimY, dimZ) {
-            return new Cart.ProductQuantity(amount, dimX, dimY, dimZ);
-        },
         Util: Util,
         PriceFormatter: PriceFormatter,
         BasicCartService: BasicCartService,
+        Product: {
+            create: _createFactory('Product'),
+            extendWith: _extendWith.bind(Cart.Product)
+        },
+        ProductFeature: {
+            create: _createFactory('ProductFeature'),
+            extendWith: _extendWith.bind(Cart.ProductFeature)
+        },
+        ProductQuantity: {
+            create: _createFactory('ProductQuantity'),
+            extendWith: _extendWith.bind(Cart.ProductQuantity)
+        },
+        /** @deprecated */
+        createProduct: _createFactory('Product'),
+        /** @deprecated */
+        createProductFeature: _createFactory('ProductFeature'),
+        /** @deprecated */
+        createProductQuantity: _createFactory('ProductQuantity'),
+        /** @deprecated */
         extendProduct: _extendWith.bind(Cart.Product),
+        /** @deprecated */
         extendProductFeature: _extendWith.bind(Cart.ProductFeature),
-        extendProductQuantity: _extendWith.bind(Cart.ProductQuantity)
+        /** @deprecated */
+        extendProductQuantity: _extendWith.bind(Cart.ProductQuantity),
     };
 }));

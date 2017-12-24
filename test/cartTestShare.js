@@ -30,15 +30,15 @@ function cartTest (Cart, Repo) {
 	
 	describe('A shopping-cart', function () {
         it('trying to create products', function () {
-            expect(function () { Cart.createProduct(); }).toThrowError(Error);
-            expect(function () { Cart.createProduct(''); }).toThrowError(Error);
-            expect(function () { Cart.createProduct(42, '', 3); }).toThrowError(RangeError);
-            expect(function () { Cart.createProduct(42, 'Test', -4); }).toThrowError(TypeError);
+            expect(function () { Cart.Product.create(); }).toThrowError(Error);
+            expect(function () { Cart.Product.create(''); }).toThrowError(Error);
+            expect(function () { Cart.Product.create(42, '', 3); }).toThrowError(RangeError);
+            expect(function () { Cart.Product.create(42, 'Test', -4); }).toThrowError(TypeError);
             expect(function () {
-                genProducts.push(Cart.createProduct(42, 'TestProduct', 499));
-                genProducts.push(Cart.createProduct(7, 'TestProduct2', 599));
-                genProducts.push(Cart.createProduct(3, 'TestProduct3', 60));
-                genProducts.push(Cart.createProduct(19, 'TestProduct4', 656));
+                genProducts.push(Cart.Product.create(42, 'TestProduct', 499));
+                genProducts.push(Cart.Product.create(7, 'TestProduct2', 599));
+                genProducts.push(Cart.Product.create(3, 'TestProduct3', 60));
+                genProducts.push(Cart.Product.create(19, 'TestProduct4', 656));
             }).not.toThrowError(Error);
         });
 
@@ -62,7 +62,7 @@ function cartTest (Cart, Repo) {
 
 			positionIDs.push(cart.add(
                 genProducts[1],
-                Cart.createProductQuantity( 2 )
+                Cart.ProductQuantity.create( 2 )
             ));
 
             // check whether adding-listener has been invoked
@@ -75,7 +75,7 @@ function cartTest (Cart, Repo) {
         it('adding some more products', function () {
             expect(function () {
                 positionIDs.push(cart.add(genProducts[2]));
-                positionIDs.push(cart.add(genProducts[3], Cart.createProductQuantity(2, 5)));
+                positionIDs.push(cart.add(genProducts[3], Cart.ProductQuantity.create(2, 5)));
             }).not.toThrow();
 
             // check whether adding-listener has been invoked
@@ -120,7 +120,7 @@ function cartTest (Cart, Repo) {
 
         it('replace quantity in cart position', function () {
             cart.getPositionById(positionIDs[0]).replaceQuantity(
-                Cart.createProductQuantity(3, 2)
+                Cart.ProductQuantity.create(3, 2)
             );
             expect(actionsMap.lastChangedPositionID).toBe('p1');
             expect(cart.calculate()).toBe(3*2*599+656*1*5);
@@ -182,7 +182,7 @@ function cartTest (Cart, Repo) {
                 return this.imgSrc;
             };
 
-            Product = Cart.extendProduct(ExtendedProduct);
+            Product = Cart.Product.extendWith(ExtendedProduct);
 
             p = Product.create(12, 'Test extended', 595, '/thumbs/test.png');
             expect(p.id).toBe(12);
@@ -202,7 +202,7 @@ function cartTest (Cart, Repo) {
                     + ' ' + this.unit + '³';
             }
 
-            Quantity = Cart.extendProductQuantity(ExtendedProductQuantity);
+            Quantity = Cart.ProductQuantity.extendWith(ExtendedProductQuantity);
 
             q = Quantity.create(5, 60, 125, 241, 'cm');
             expect(q.getCubicUnit()).toBe((60*125*241) + ' cm³');
