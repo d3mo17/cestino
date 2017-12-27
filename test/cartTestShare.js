@@ -28,7 +28,7 @@ function cartTest (Cart, Repo) {
             }
         };
 	
-	describe('A shopping-cart', function () {
+    describe('A shopping-cart', function () {
         it('trying to create products', function () {
             expect(function () { Cart.Product.create(); }).toThrowError(Error);
             expect(function () { Cart.Product.create(''); }).toThrowError(Error);
@@ -52,7 +52,7 @@ function cartTest (Cart, Repo) {
             expect(function () { cart.on('add', function () {}); }).not.toThrowError(Error);
         });
 
-		it('adding a first product', function () {
+        it('adding a first product', function () {
             expect(function () {
                 cart.on('add', function (oPosition) {
                     actionsMap.lastAddedPositionID = oPosition.id;
@@ -60,7 +60,7 @@ function cartTest (Cart, Repo) {
             }).not.toThrowError(Error);
             expect(actionsMap.lastAddedPositionID).toBe(false);
 
-			positionIDs.push(cart.add(
+            positionIDs.push(cart.add(
                 genProducts[1],
                 Cart.ProductQuantity.create( 2 )
             ));
@@ -68,9 +68,9 @@ function cartTest (Cart, Repo) {
             // check whether adding-listener has been invoked
             expect(actionsMap.lastAddedPositionID).toBe('p1');
 			
-			expect(cart.calculate()).toBe(2*599);
+            expect(cart.calculate()).toBe(2*599);
             expect(positionIDs[0]).toBe('p1');
-		});
+        });
 
         it('adding some more products', function () {
             expect(function () {
@@ -81,8 +81,7 @@ function cartTest (Cart, Repo) {
             // check whether adding-listener has been invoked
             expect(actionsMap.lastAddedPositionID).toBe('p3');
 
-			expect(cart.calculate()
-            ).toBe(2*599+60+656*2*5);
+            expect(cart.calculate()).toBe(2*599+60+656*2*5);
             expect(positionIDs.join('')).toBe(['p1','p2','p3'].join(''));
         });
 
@@ -210,5 +209,5 @@ function cartTest (Cart, Repo) {
 
             cart.add(p, q);
         });
-	});
+    });
 }
