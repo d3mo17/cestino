@@ -153,7 +153,8 @@ Example:
 <script src="node_modules/cestino/dist/cestino.min.js"></script>
 
 <script>
-    var InchQuantity,
+    var tax,
+        InchQuantity,
         DescribedProduct,
         oCart = Cestino.create(),
         // use point as separator for decimal digits
@@ -177,13 +178,23 @@ Example:
     /**
      * Your product extension with additional parameter in constructor
      */
-    function ProductWithDescription(id, title, price, description) {
-        this.description = description;
+    function ProductWithTax(id, title, price, tax) {
+        this.tax = tax;
     }
-    DescribedProduct = Cestino.Product.extendWith(ProductWithDescription);
+    ProductWithTax.prototype.getPrice = function () {
+        return Math.round(this.price * this.tax.getFactor(), 10);
+    };
+    TaxProduct = Cestino.Product.extendWith(ProductWithTax);
+    
+    tax = {
+        getFactor: function() {
+            // 17% tax
+            return 1.17;
+        }
+    };
 
     oCart.add(
-        DescribedProduct.create(42, 'TestProduct', 499, 'This is a test product.'),
+        TaxProduct.create(42, 'TestProduct', 499, tax),
         InchQuantity.create(2, 3, 4, 5)
     );
 

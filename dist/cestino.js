@@ -532,6 +532,14 @@
     };
 
 
+        /**
+         * @returns {int}
+         */
+        Cart.Product.prototype.getPrice = function () {
+            return this.price;
+        };
+
+
     /**
      * Class to represent the quantity structure of a product in a position. No limits or ranges
      * will be checked, you have to implement it by yourself!
@@ -608,6 +616,14 @@
         this.price = price;
         this.label = label;
     };
+
+
+        /**
+         * @returns {int}
+         */
+        Cart.ProductFeature.prototype.getPrice = function () {
+            return this.price;
+        };
 
 
         /**
@@ -947,10 +963,10 @@
             var nFeaturePrice = 0;
 
             this.features.forEach(function (eFeature) {
-                nFeaturePrice += eFeature.price;
+                nFeaturePrice += eFeature.getPrice();
             });
 
-            return (this.product.price + nFeaturePrice) * this.quantity.getFactor();
+            return (this.product.getPrice() + nFeaturePrice) * this.quantity.getFactor();
         }
 
 
