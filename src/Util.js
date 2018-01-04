@@ -1,7 +1,6 @@
 /**
- *
  * @param   {Object} root
- * @param   {function} factory
+ * @param   {Function} factory
  *
  * @returns {Object}
  */
@@ -17,9 +16,12 @@
 }(this, function () {
     "use strict";
 
+    var moduleAPI;
+
     /**
-     * Is Int?
+     * Is passed data of type Integer?
      *
+     * @public
      * @param   {*} n
      * @returns {Boolean}
      */
@@ -28,8 +30,9 @@
     }
 
     /**
-     * Is empty?
+     * Is passed data empty?
      *
+     * @public
      * @param   {*} val
      * @returns {Boolean}
      */
@@ -38,12 +41,12 @@
     }
 
     /**
-     * Pad a string on left side to a certain length with another string
+     * Pad a string on left side to a certain length with another string.
      *
+     * @public
      * @param   {String} str
-     * @param   {Number} width
+     * @param   {Integer} width
      * @param   {String} padStr
-     *
      * @returns {String}
      */
     function _lpad(str, width, padStr) {
@@ -65,12 +68,19 @@
         return padding.slice(0, width - str.length) + str;
     }
 
-    // Module-API
-    return {
+    /**
+     * Utilities used to check and modify basic data types.
+     * 
+     * @module Cestino/Util
+     * @borrows <anonymous>~_isInt as isInt
+     * @borrows <anonymous>~_isEmpty as isEmpty
+     * @borrows <anonymous>~_lpad as lpad
+     */
+    moduleAPI = {
         isInt: _isInt,
         isEmpty: _isEmpty,
         lpad: _lpad
     };
+
+    return moduleAPI;
 }));
-
-

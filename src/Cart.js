@@ -2,7 +2,7 @@
  * Requirements: IE9+
  * 
  * @param   {Object} root
- * @param   {function} factory
+ * @param   {Function} factory
  *
  * @returns {Object}
  */
@@ -26,44 +26,42 @@
 }(this, function (Util, BasicCartService, PriceFormatter) {
     "use strict";
 
-    var INCOMPLETE_MARKER = '__INCOMPLETE__',
-        availableEvents = ['load', 'add', 'change', 'remove'];
+    /**
+     * A basic shopping cart implementation in javascript.
+     * @module Cestino
+     * @requires Cestino/BasicCartService
+     * @requires Cestino/PriceFormatter
+     * @requires Cestino/Util
+     */
 
     /**
-     * Class to manage a shopping cart. The cart only supports
-     * product-positions separated in shipping-groups. The prices were
-     * handled without tax.
-     * You have to implement prices for shipping and for payment on your
-     * own.
-     *
-     * @constructor
-     * @param   {object} oService
-     *
-     * @returns {Cart}
+     * Callback that will be fired, if registered and the cart has been load from json.
+     * @callback module:Cestino~loadCallback
+     * @param {Cart} cart
+     * @abstract
      */
-    function Cart(oService) {
-        oService = oService || BasicCartService.create();
-        if (typeof oService['setProductDataToCart'] !== 'function') {
-            throw new TypeError([
-                'The service has to be able to find Products! ', "\n",
-                'Implement a function named "setProductDataToCart" that takes one argument of type ',
-                'Object. ', "\n", 'The keys of the object has to represent product-ids, the ',
-                'values has to be arrays of selected product-feature-ids.'
-            ].join(''));
-        }
+    /**
+     * Callback that will be fired, if registered and a product has been add to cart.
+     * @callback module:Cestino~addProductCallback
+     * @param {CartPosition} position
+     * @abstract
+     */
+    /**
+     * Callback that will be fired, if registered and a product has been removed from cart.
+     * @callback module:Cestino~removeProductCallback
+     * @param {CartPosition} position
+     * @abstract
+     */
+    /**
+     * Callback that will be fired, if registered and a product-position in cart has been
+     * changed.
+     * @callback module:Cestino~changePositionCallback
+     * @param {CartPosition} position
+     * @abstract
+     */
 
-        this.positionId = 1;
-
-        this.oCartService = oService;
-        this.positions = {};
-        this.listener = {
-            add: [],
-            remove: [],
-            change: [],
-            load: []
-        };
-    }
-
+    var INCOMPLETE_MARKER = '__INCOMPLETE__',
+        availableEvents = ['load', 'add', 'change', 'remove'];
 
     /**
      * Cart-API
@@ -83,121 +81,121 @@
         walk:                _walk /* Params: fnCallback */
     };
 
-
-    /**
-     * Walks through all positions of the cart, calls passed function and puts position and group to
-     * it.
-     * 
-     * @param   {function} fnCallback
-     * @returns {Cart}
-     * @private
-     */
-    function _walk(fnCallback) {
-        var that = this;
-
-        this.getShippingGroups().forEach(function (group) {
-            that.getPositionsOfGroup(group).forEach(function (oPosition) {
-                fnCallback(oPosition, group);
-            });
-        });
-
-        return this;
-    }
+        // CartPosition-API
+        CartPosition.prototype = {
+            calculate: _calculateCartPosition,
+            incrementAmount: _incrementAmount, /* Params: amount */
+            decrementAmount: _decrementAmount, /* Params: amount */
+            replaceQuantity: _replaceQuantity /* Params: amount */
+        };
 
 
     /**
-     * Returns a json-representation of the cart; Only necessary information will be transported to
-     * the json-string.
-     * 
-     * @returns {string}
-     * @private
-     */
-    function _toJSON() {
-        var cart = {date: (new Date()).toISOString(), AutoPosId: this.positionId, pos: {}};
-
-        this.walk(function (oPosition, group) {
-            cart.pos[group] = cart.pos[group] || [];
-            cart.pos[group].push({
-                id: oPosition.id,
-                product: {
-                    id: oPosition.product.id
-                },
-                quantity: {
-                    amount: oPosition.quantity.amount,
-                    dimX: oPosition.quantity.dimensionX,
-                    dimY: oPosition.quantity.dimensionY,
-                    dimZ: oPosition.quantity.dimensionZ
-                },
-                features: oPosition.features.map(function (oFeature) {
-                    return oFeature.id;
-                })
-            });
-        });
-
-        return JSON.stringify(cart);
-    }
-
-
-    /**
-     * Build the cart from JSON
+     * Class to manage a shopping cart. The cart only supports
+     * product-positions separated in shipping-groups. The prices were
+     * handled without tax.
+     * You have to implement prices for shipping and for payment on your
+     * own.
      *
-     * @param   {string} sJSON
-     * 
-     * @returns {Cart}
+     * @constructor
+     * @global
      * @private
+     * @param {Object} oService
+     * @borrows <anonymous>~_addProduct as add
+     * @borrows <anonymous>~_on as on
+     * @borrows <anonymous>~_off as off
+     * @borrows <anonymous>~_calculateGroup as calculateGroup
+     * @borrows <anonymous>~_calculate as calculate
+     * @borrows <anonymous>~_deletePosition as deletePosition
+     * @borrows <anonymous>~_getPositionsOfGroup as getPositionsOfGroup
+     * @borrows <anonymous>~_getGroups as getShippingGroups
+     * @borrows <anonymous>~_getPositionById as getPositionById
+     * @borrows <anonymous>~_toJSON as toJSON
+     * @borrows <anonymous>~_fromJSON as fromJSON
+     * @borrows <anonymous>~_walk as walk
      */
-    function _fromJSON(sJSON) {
-        var that = this, oCart, oPosition, internGrpName;
-
-        if (Object.keys(this.positions).length !== 0) {
-            throw new RangeError('Cart has to be empty when loading from a JSON!');
+    function Cart(oService) {
+        oService = oService || BasicCartService.create();
+        if (typeof oService['setProductDataToCart'] !== 'function') {
+            throw new TypeError([
+                'The service has to be able to find Products! ', "\n",
+                'Implement a function named "setProductDataToCart" that takes one argument of type ',
+                'Object. ', "\n", 'The keys of the object has to represent product-ids, the ',
+                'values has to be arrays of selected product-feature-ids.'
+            ].join(''));
         }
-        oCart = JSON.parse(sJSON);
-        this.positionId = oCart.AutoPosId;
 
-        Object.keys(oCart.pos).forEach(function (group) {
-            oCart.pos[group].forEach(function (position) {
-                oPosition = new CartPosition(
-                    position.id,
-                    new Cart.Product(position.product.id, INCOMPLETE_MARKER, 987654321),
-                    position.features.map(function (id) {
-                        return new Cart.ProductFeature(id, INCOMPLETE_MARKER, 987654321);
-                    }),
-                    new Cart.ProductQuantity(
-                        position.quantity.amount,
-                        position.quantity.dimX,
-                        position.quantity.dimY,
-                        position.quantity.dimZ
-                    )
-                );
-                oPosition.cart = that;
-                internGrpName = 'g'+group;
-                that.positions[internGrpName] = that.positions[internGrpName] || [];
-                that.positions[internGrpName].push(oPosition);
-            });
-        });
+        /** @member {Integer} */
+        this.positionId = 1;
 
-        // notify load-listeners on promise resolve
-        this.oCartService.setProductDataToCart(this)
-            .then(function() {
-                that.listener.load.forEach(function (fnListener) {
-                    fnListener(that);
-                });
-            });
-
-        return this;
+        /**
+         * @member {Object}
+         * @instance
+         */
+        this.oCartService = oService;
+        /** @member {CartPosition[]} */
+        this.positions = {};
+        /** @member {Object} */
+        this.listener = {
+            /**
+             * Event reporting that a product has been add to cart.
+             *
+             * @event module:Cestino~add
+             * @param {CartPosition} position
+             */
+            add: [],
+            /**
+             * Event reporting that a product has been removed from cart.
+             *
+             * @event module:Cestino~remove
+             * @param {CartPosition} position
+             */
+            remove: [],
+            /**
+             * Event reporting that a product-position in cart has been changed.
+             *
+             * @event module:Cestino~change
+             * @param {CartPosition} position
+             */
+            change: [],
+            /**
+             * Event reporting that the cart has been load from json.
+             * @event module:Cestino~load
+             * @param {Cart} cart
+             */
+            load: []
+        };
     }
 
+        /**
+         * The cart reference will be injected on instancing separately.
+         *
+         * @constructor
+         * @private
+         * @global
+         * @param   {String} sId
+         * @param   {Product} oProduct
+         * @param   {ProductFeature[]} aFeatures
+         * @param   {ProductQuantity} oQuantity
+         */
+        function CartPosition(sId, oProduct, aFeatures, oQuantity) {
+            this.id       = sId;
+            this.product  = oProduct;
+            this.features = aFeatures;
+            this.quantity = oQuantity;
+            this.cart     = null;
+        }
 
     /**
      * Class to describe a product that was add to cart.
      *
-     * @param   {string} id
-     * @param   {string} title
-     * @param   {Number} price
-     *
-     * @returns {Cart.Product}
+     * @constructor
      * @private
+     * @global
+     * @param   {String} id
+     * @param   {String} title
+     * @param   {Integer} price
+     * @borrows module:Cestino~Cart.Product#getPrice as getPrice
      */
     Cart.Product = function (id, title, price) {
         if (Util.isEmpty(id) || (typeof id !== 'string' && ! Util.isInt(id))) {
@@ -216,26 +214,28 @@
         this.price = price;
     };
 
-
         /**
-         * @returns {int}
+         * Returns the price of the product. Overwrite this method to modify the cart calculation
+         * to your needs (e. g. to add tax)
+         * @method  Product#getPrice
+         * @returns {Integer}
          */
         Cart.Product.prototype.getPrice = function () {
             return this.price;
         };
-
 
     /**
      * Class to represent the quantity structure of a product in a position. No limits or ranges
      * will be checked, you have to implement it by yourself!
      * 
      * @constructor
-     * @param   {Number} amount
-     * @param   {Number} dimX
-     * @param   {Number} dimY
-     * @param   {Number} dimZ
-     *
-     * @returns {Cart.ProductQuantity}
+     * @private
+     * @global
+     * @param   {Integer} amount
+     * @param   {Integer=} dimX
+     * @param   {Integer=} dimY
+     * @param   {Integer=} dimZ
+     * @borrows module:Cestino~Cart.ProductQuantity#getFactor as getFactor
      */
     Cart.ProductQuantity = function (amount, dimX, dimY, dimZ) {
         // Integers only!
@@ -265,29 +265,30 @@
         }
     };
 
-
         /**
-         * Calculates the quantity factor for the product.
-         * @returns {Number}
+         * Calculates the quantity factor for the product. Overwrite this method to modify the cart
+         * calculation to your needs (e. g. to convert into another scale unit).
+         * @method  ProductQuantity#getPrice
+         * @returns {Integer}
          */
         Cart.ProductQuantity.prototype.getFactor = function () {
             return this.amount * this.dimensionX * this.dimensionY * this.dimensionZ;
         };
 
-
     /**
      * Class to describe a selected feature of a product.
      *
      * @constructor
-     * @param   {String|Number} id
+     * @private
+     * @global
+     * @param   {(String|Integer)} id
      * @param   {String} label
-     * @param   {Number} price
-     *
-     * @returns {Cart.ProductFeature}
+     * @param   {Integer=} price
+     * @borrows module:Cestino~Cart.ProductFeature#getPrice as getPrice
      */
     Cart.ProductFeature = function (id, label, price) {
         if (Util.isEmpty(id) || (typeof id !== 'string' && ! Util.isInt(id))) {
-            throw new RangeError('The product feature has to have an id of type string oe integer!');
+            throw new RangeError('The product feature has to have an id of type string or integer!');
         }
         if (Util.isEmpty(label) || typeof label !== 'string') {
             throw new RangeError('The product feature has to have a title of type string!');
@@ -302,9 +303,11 @@
         this.label = label;
     };
 
-
         /**
-         * @returns {int}
+         * Returns the price of a feature selected to a product. Overwrite this method to modify
+         * the cart calculation to your needs
+         * @method  ProductFeature#getPrice
+         * @returns {Integer}
          */
         Cart.ProductFeature.prototype.getPrice = function () {
             return this.price;
@@ -312,7 +315,115 @@
 
 
         /**
-         * @param {string} sKind
+         * Walks through all positions of the cart, calls passed function and puts position and group to
+         * it.
+         * 
+         * @method  Cart#walk
+         * @param   {Function} fnCallback
+         * @returns {Cart}
+         * @public
+         */
+        function _walk(fnCallback) {
+            var that = this;
+    
+            this.getShippingGroups().forEach(function (group) {
+                that.getPositionsOfGroup(group).forEach(function (oPosition) {
+                    fnCallback(oPosition, group);
+                });
+            });
+    
+            return this;
+        }
+    
+    
+        /**
+         * Returns a json-representation of the cart; Only necessary information will be transported to
+         * the json-string.
+         *
+         * @method  Cart#toJSON
+         * @returns {String}
+         * @public
+         */
+        function _toJSON() {
+            var cart = {date: (new Date()).toISOString(), AutoPosId: this.positionId, pos: {}};
+    
+            this.walk(function (oPosition, group) {
+                cart.pos[group] = cart.pos[group] || [];
+                cart.pos[group].push({
+                    id: oPosition.id,
+                    product: {
+                        id: oPosition.product.id
+                    },
+                    quantity: {
+                        amount: oPosition.quantity.amount,
+                        dimX: oPosition.quantity.dimensionX,
+                        dimY: oPosition.quantity.dimensionY,
+                        dimZ: oPosition.quantity.dimensionZ
+                    },
+                    features: oPosition.features.map(function (oFeature) {
+                        return oFeature.id;
+                    })
+                });
+            });
+    
+            return JSON.stringify(cart);
+        }
+    
+    
+        /**
+         * Build the cart from JSON
+         *
+         * @method  Cart#fromJSON
+         * @param   {String} sJSON
+         * @returns {Cart}
+         * @public
+         * @fires   module:Cestino~load
+         */
+        function _fromJSON(sJSON) {
+            var that = this, oCart, oPosition, internGrpName;
+    
+            if (Object.keys(this.positions).length !== 0) {
+                throw new RangeError('Cart has to be empty when loading from a JSON!');
+            }
+            oCart = JSON.parse(sJSON);
+            this.positionId = oCart.AutoPosId;
+    
+            Object.keys(oCart.pos).forEach(function (group) {
+                oCart.pos[group].forEach(function (position) {
+                    oPosition = new CartPosition(
+                        position.id,
+                        new Cart.Product(position.product.id, INCOMPLETE_MARKER, 987654321),
+                        position.features.map(function (id) {
+                            return new Cart.ProductFeature(id, INCOMPLETE_MARKER, 987654321);
+                        }),
+                        new Cart.ProductQuantity(
+                            position.quantity.amount,
+                            position.quantity.dimX,
+                            position.quantity.dimY,
+                            position.quantity.dimZ
+                        )
+                    );
+                    oPosition.cart = that;
+                    internGrpName = 'g'+group;
+                    that.positions[internGrpName] = that.positions[internGrpName] || [];
+                    that.positions[internGrpName].push(oPosition);
+                });
+            });
+    
+            // notify load-listeners on promise resolve
+            this.oCartService.setProductDataToCart(this)
+                .then(function() {
+                    that.listener.load.forEach(function (fnListener) {
+                        fnListener(that);
+                    });
+                });
+    
+            return this;
+        }
+
+
+        /**
+         * @param {String} sKind
          * @param {CartPosition} oPosition
          * @private
          */
@@ -324,13 +435,16 @@
 
 
         /**
-         * @param   {Cart.Product} oProduct
-         * @param   {Cart.ProductQuantity} oQuantity
-         * @param   {string} sShippingGroup [optional] default is ''
-         * @param   {array}  aProductFeatures [optional] default is []
-         *
-         * @returns {string} Id of generated Position
-         * @private
+         * Creates a position in the cart
+         * 
+         * @method  Cart#add
+         * @param   {Product} oProduct
+         * @param   {(ProductQuantity|Integer)} oQuantity
+         * @param   {String=} sShippingGroup default is ''
+         * @param   {ProductFeature[]}  [aProductFeatures=[]] default is []
+         * @returns {String} Id of generated Position
+         * @public
+         * @fires   module:Cestino~add
          */
         function _addProduct(
             oProduct, oQuantity, sShippingGroup, aProductFeatures
@@ -372,11 +486,11 @@
             /**
              * Adds a function that will be invoke when a specific event occurs.
              *
-             * @param   {string}   kind
-             * @param   {function} fnListener
-             *
+             * @method  Cart#on
+             * @param   {String} kind "add" (product), "remove" (product), "change" (position) or "load" (cart)
+             * @param   {(module:Cestino~loadCallback|module:Cestino~addProductCallback|module:Cestino~removeProductCallback|module:Cestino~changePositionCallback)} fnListener
              * @returns {Cart}  this-reference for method chaining ...
-             * @private
+             * @public
              */
             function _on(kind, fnListener) {
                 if (typeof fnListener !== 'function') {
@@ -393,11 +507,11 @@
             /**
              * Removes a function that will be invoke on specific action.
              *
+             * @method  Cart#off
              * @param   {string}   kind
-             * @param   {function} fnListener
-             *
+             * @param   {(module:Cestino~loadCallback|module:Cestino~addProductCallback|module:Cestino~removeProductCallback|module:Cestino~changePositionCallback)} fnListener
              * @returns {Cart}  this-reference for method chaining ...
-             * @private
+             * @public
              */
             function _off(kind, fnListener) {
                 var that = this;
@@ -419,8 +533,9 @@
         /**
          * Get all defined groups.
          *
-         * @returns {Array}
-         * @private
+         * @method  Cart#getShippingGroups
+         * @returns {String[]}
+         * @public
          */
         function _getGroups() {
             return Object.keys(this.positions).map(function (val) {
@@ -432,10 +547,10 @@
         /**
          * Returns all positions of the pssed group.
          *
+         * @method  Cart#getPositionsOfGroup
          * @param   {String} sShippingGroup
-         *
-         * @returns {Array}
-         * @private
+         * @returns {CartPosition[]}
+         * @public
          */
         function _getPositionsOfGroup(sShippingGroup) {
             var group = 'g'+(sShippingGroup || '');
@@ -443,7 +558,7 @@
             if (! (group in this.positions)) {
                 throw new ReferenceError(
                     ["No shipping-group with name '",sShippingGroup,"' found!"].join('')
-                );
+                )
             }
 
             return this.positions[group];
@@ -453,10 +568,10 @@
         /**
          * Calculates the subtotal of a shipping-group.
          *
-         * @param   {string} sShippingGroup
-         *
-         * @returns {Number}
-         * @private
+         * @method  Cart#calculateGroup
+         * @param   {String} sShippingGroup
+         * @returns {Integer}
+         * @public
          */
         function _calculateGroup(sShippingGroup) {
             var subtotal = 0;
@@ -472,8 +587,9 @@
         /**
          * Calculates the total of the whole shopping-cart.
          *
-         * @returns {Number}
-         * @private
+         * @method  Cart#calculate
+         * @returns {Integer}
+         * @public
          */
         function _calculate() {
             var that = this, total = 0;
@@ -487,9 +603,13 @@
 
 
         /**
-         * @param   {string} sIdCartPosition
+         * Delete a cart-position by id.
+         * 
+         * @method  Cart#deletePosition
+         * @param   {String} sIdCartPosition
          * @returns {CartPosition} sIdCartPosition The position that was removed
-         * @private
+         * @public
+         * @fires   module:Cestino~remove
          */
         function _deletePosition(sIdCartPosition) {
             var oPosition,
@@ -509,10 +629,10 @@
         /**
          * Tries to get a position from given id.
          *
-         * @param   {string} sIdCartPosition
-         *
+         * @method  Cart#getPositionById
+         * @param   {String} sIdCartPosition
          * @returns {CartPosition}
-         * @private
+         * @public
          */
         function _getPositionById(sIdCartPosition) {
             var oFound = _findPosition.call(this, sIdCartPosition);
@@ -528,9 +648,10 @@
 
 
         /**
-         * @param   {string} sIdCartPosition
+         * Search positions by id
          *
-         * @returns {object} {"group": "GROUP_AS_STRING", "index": "INDEX_AS_INT"}
+         * @param   {String} sIdCartPosition
+         * @returns {Object} {"group": "GROUP_AS_STRING", "index": "INDEX_AS_INT"}
          * @private
          */
         function _findPosition(sIdCartPosition) {
@@ -552,41 +673,13 @@
 
 
         /**
-         * The cart reference will be injected on instancing separately.
-         *
-         * @constructor
-         * @param   {string} sId
-         * @param   {Cart.Product} oProduct
-         * @param   {array} aFeatures Has to be an array of Cart.ProductFeature-objects
-         * @param   {ProductQuantity} oQuantity
-         * 
-         * @return  {CartPosition}
-         */
-        function CartPosition(sId, oProduct, aFeatures, oQuantity) {
-            this.id       = sId;
-            this.product  = oProduct;
-            this.features = aFeatures;
-            this.quantity = oQuantity;
-            this.cart     = null;
-        }
-
-
-        // CartPosition-API
-        CartPosition.prototype = {
-            calculate: _calculateCartPosition,
-            incrementAmount: _incrementAmount, /* Params: amount */
-            decrementAmount: _decrementAmount, /* Params: amount */
-            replaceQuantity: _replaceQuantity /* Params: amount */
-        };
-
-
-        /**
          * Replacing the product quantity in cart position.
          *
-         * @param   {Cart.ProductQuantity} oQuantity
-         *
-         * @returns {Cart} this-reference for method chaining ...
-         * @private
+         * @method  Cart#replaceQuantity
+         * @param   {ProductQuantity} oQuantity
+         * @returns {CartPosition} this-reference for method chaining ...
+         * @public
+         * @fires   module:Cestino~change
          */
         function _replaceQuantity(oQuantity) {
             if (! (oQuantity instanceof Cart.ProductQuantity)) {
@@ -603,12 +696,13 @@
         /**
          * Incrementing amount of cart position.
          *
-         * @param   {Number} amount
-         *
+         * @method  Cart#incrementAmount
+         * @param   {Integer} amount
          * @returns {CartPosition}
-         * @private
+         * @public
+         * @fires   module:Cestino~change
          */
-        function _incrementAmount( amount ) {
+        function _incrementAmount(amount) {
             amount = amount || 1;
             if (! Util.isInt(amount)) {
                 throw new TypeError('Amount has to be of type integer!');
@@ -622,12 +716,13 @@
         /**
          * Decrementing amount of cart position.
          *
-         * @param   {Number} amount
-         *
+         * @method  Cart#decrementAmount
+         * @param   {Integer} amount
          * @returns {CartPosition}
-         * @private
+         * @public
+         * @fires   module:Cestino~change
          */
-        function _decrementAmount( amount ) {
+        function _decrementAmount(amount) {
             amount = amount || 1;
             if (! Util.isInt(amount)) {
                 throw new TypeError('Amount has to be of type integer!');
@@ -641,8 +736,8 @@
         /**
          * Returns calculated price in cents.
          *
-         * @returns {Number}
-         * @private
+         * @returns {Integer}
+         * @public
          */
         function _calculateCartPosition() {
             var nFeaturePrice = 0;
@@ -688,7 +783,7 @@
     /**
      * Creates a factory to instanciate a new object of passed type.
      * 
-     * @param {string} kind Type of object to create
+     * @param {String} kind Type of object to create
      * @private
      */
     function _createFactory(kind) {
@@ -704,35 +799,124 @@
 
     // Module-API
     return {
+        /**
+         * Creates an object of type Cart; The main object.
+         * @alias   module:Cestino.create
+         * @param   {Object} oService
+         * @returns {Cart}
+         */
         create: function (oService) {
             return new Cart(oService);
         },
+        /**
+         * @alias module:Cestino.Util
+         * @see   {@link module:Cestino/Util}
+         */
         Util: Util,
+        /**
+         * @alias module:Cestino.PriceFormatter
+         * @see   {@link module:Cestino/PriceFormatter}
+         */
         PriceFormatter: PriceFormatter,
+        /**
+         * @alias module:Cestino.BasicCartService
+         * @see   {@link module:Cestino/BasicCartService}
+         */
         BasicCartService: BasicCartService,
+        /** @alias module:Cestino.Product */
         Product: {
+            /**
+             * Creates an object of type Cart.Product
+             * @alias   module:Cestino.Product.create
+             * @param   {String} id
+             * @param   {String} title
+             * @param   {Integer} price
+             * @returns {Product}
+             */
             create: _createFactory('Product'),
+            /**
+             * Extends class Product by passed constructor
+             * @alias module:Cestino.Product.extendWith
+             * @param {*} subclassConstructor
+             * @returns {Product}
+             */
             extendWith: _extendWith.bind(Cart.Product)
         },
+        /** @alias module:Cestino.ProductFeature */
         ProductFeature: {
+            /**
+             * Creates an object of type Cart.ProductFeature
+             * @alias   module:Cestino.ProductFeature.create
+             * @param   {String|Integer} id
+             * @param   {String} label
+             * @param   {Integer} price
+             * @returns {ProductFeature}
+             */
             create: _createFactory('ProductFeature'),
+            /**
+             * Extends class ProductFeature by passed constructor
+             * @alias module:Cestino.ProductFeature.extendWith      
+             * @param {*} subclassConstructor
+             * @returns {ProductFeature}
+             */
             extendWith: _extendWith.bind(Cart.ProductFeature)
         },
+        /** @alias module:Cestino.ProductQuantity */
         ProductQuantity: {
+            /**
+             * Creates an object of type Cart.ProductQuantity
+             * @alias   module:Cestino.ProductQuantity.create
+             * @param   {Integer} amount
+             * @param   {Integer} dimX
+             * @param   {Integer} dimY
+             * @param   {Integer} dimZ
+             * @returns {ProductQuantity}
+             */
             create: _createFactory('ProductQuantity'),
+            /**
+             * Extends class ProductQuantity by passed constructor
+             * @alias module:Cestino.ProductQuantity.extendWith      
+             * @param {*} subclassConstructor
+             * @returns {ProductQuantity}
+             */
             extendWith: _extendWith.bind(Cart.ProductQuantity)
         },
-        /** @deprecated */
+        
+        /**
+         * @deprecated
+         * @method
+         * @static
+         */
         createProduct: _createFactory('Product'),
-        /** @deprecated */
+        /**
+         * @deprecated
+         * @method
+         * @static
+         */
         createProductFeature: _createFactory('ProductFeature'),
-        /** @deprecated */
+        /**
+         * @deprecated
+         * @method
+         * @static
+         */
         createProductQuantity: _createFactory('ProductQuantity'),
-        /** @deprecated */
+        /**
+         * @deprecated
+         * @method
+         * @static
+         */
         extendProduct: _extendWith.bind(Cart.Product),
-        /** @deprecated */
+        /**
+         * @deprecated
+         * @method
+         * @static
+         */
         extendProductFeature: _extendWith.bind(Cart.ProductFeature),
-        /** @deprecated */
+        /**
+         * @deprecated
+         * @method
+         * @static
+         */
         extendProductQuantity: _extendWith.bind(Cart.ProductQuantity),
     };
 }));

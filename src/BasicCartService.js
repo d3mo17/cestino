@@ -2,7 +2,7 @@
  * Requirements: IE9+
  *
  * @param   {Object} root
- * @param   {function} factory
+ * @param   {Function} factory
  *
  * @returns {Object}
  */
@@ -21,9 +21,18 @@
 }(this, function (Promise, Atomic) {
     "use strict";
 
+    /** @default */
     var defaults = {
         url: ''
     };
+
+    /**
+     * Fetch masterdata from an external resource and put it to the cart model.
+     * 
+     * @module   Cestino/BasicCartService
+     * @requires bluebird
+     * @requires atomicjs
+     */
 
 
     /**
@@ -35,17 +44,20 @@
 
 
     /**
-     * Service used to put correct master data of products into the model
+     * Service used to fetch and put master data of products into the model.
      *
-     * @param   {object} options
-     *
-     * @returns {BasicCartService}
+     * @constructor
+     * @private
+     * @global
+     * @param   {Object} options
+     * @borrows <anonymous>~_setProductDataToCart as setProductDataToCart
      */
     function BasicCartService(options) {
         var attr;
         
         // clone defaults ... (Does only work with plain objects, don't use it e. g. to clone
         // Date-object values)
+        /** @member {Object} */
         this.options = JSON.parse(JSON.stringify(defaults));
         for (attr in options) {
             this.options[attr] = options[attr];
@@ -94,10 +106,10 @@
         /**
          * Updates the cart with actual valid information about products.
          *
+         * @method  BasicCartService#setProductDataToCart
          * @param   {Cart} oCart
-         * 
          * @returns {Promise}
-         * @private
+         * @public
          */
         function _setProductDataToCart(oCart) {
             var that = this, data = {};
@@ -118,8 +130,15 @@
             });
         }
 
-
+    // Module-API
     return {
+        /**
+         * Creates an object to load masterdata from a server.
+         * 
+         * @alias   module:Cestino/BasicCartService.create
+         * @param   {Object} options
+         * @returns {BasicCartService}
+         */
         create: function (options) {
             return new BasicCartService(options);
         }

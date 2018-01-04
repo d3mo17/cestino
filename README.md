@@ -19,6 +19,9 @@ A basic shopping cart implementation in javascript.
     $ npm install cestino
 ```
 
+### API documentation
+[API of Cestino](api.md)
+
 ### Examples
 
 ##### Create a new cart and add a product
