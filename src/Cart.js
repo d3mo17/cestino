@@ -294,6 +294,8 @@
      * @borrows module:Cestino~Cart.ProductFeature#getPrice as getPrice
      */
     Cart.ProductFeature = function (id, label, price) {
+        price = price || 0;
+
         if (Util.isEmpty(id) || (typeof id !== 'string' && ! Util.isInt(id))) {
             throw new RangeError('The product feature has to have an id of type string or integer!');
         }

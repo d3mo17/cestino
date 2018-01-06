@@ -136,10 +136,28 @@ function cartTest (Cart, Repo) {
             cart.add(genProducts[2], 3, Cart.ShippingGroup.create('shgrp').setPrice(67));
             cart.add(genProducts[0], 1, 'shgrp');
             cart.add(genProducts[0], 2, Cart.ShippingGroup.create('shgrp2').setPrice(34));
+
             // without shipping cost calculation
             expect(cart.calculate()).toBe(3*2*599+656*1*5+3*60+1*499+2*499);
             // with shipping cost calculation
             expect(cart.calculate(true)).toBe(3*2*599+656*1*5+3*60+1*499+67+2*499+34);
+        });
+
+        it('create a product-feature', function () {
+            expect(function () { Cart.ProductFeature.create(); })
+                .toThrowError(Error);
+            expect(function () { Cart.ProductFeature.create(3, ''); })
+                .toThrowError(Error);
+            expect(function () { Cart.ProductFeature.create('2##', 'color: orange'); })
+                .not.toThrowError(Error);
+            expect(function () { Cart.ProductFeature.create(2, 'color: orange'); })
+                .not.toThrowError(Error);
+            expect(function () { Cart.ProductFeature.create(2, 'color: orange', 0); })
+                .not.toThrowError(Error);
+            expect(function () { Cart.ProductFeature.create(2, 'color: orange', 10); })
+                .not.toThrowError(Error);
+            expect(function () { Cart.ProductFeature.create(2, 'color: orange', -1); })
+                .toThrowError(Error);
         });
 
         it('Check json-representation of cart', function () {

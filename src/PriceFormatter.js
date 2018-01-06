@@ -112,7 +112,7 @@
     };
 
     // Module-API
-	return {
+    return {
         /**
          * Creates an object to convert integer price to decimal price (e. g. cents to dollar/euro).
          * 
