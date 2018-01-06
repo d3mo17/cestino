@@ -60,10 +60,7 @@ function cartTest (Cart, Repo) {
             }).not.toThrowError(Error);
             expect(actionsMap.lastAddedPositionID).toBe(false);
 
-            positionIDs.push(cart.add(
-                genProducts[1],
-                Cart.ProductQuantity.create( 2 )
-            ));
+            positionIDs.push(cart.add(genProducts[1], 2));
 
             // check whether adding-listener has been invoked
             expect(actionsMap.lastAddedPositionID).toBe('p1');
@@ -133,6 +130,16 @@ function cartTest (Cart, Repo) {
         it('trying to add a product', function () {
             expect(function () { cart.add(); }).toThrowError(Error);
             expect(function () { cart.add(''); }).toThrowError(Error);
+        });
+
+        it('add products to a separate shipping groups and calculate costs', function () {
+            cart.add(genProducts[2], 3, Cart.ShippingGroup.create('shgrp').setPrice(67));
+            cart.add(genProducts[0], 1, 'shgrp');
+            cart.add(genProducts[0], 2, Cart.ShippingGroup.create('shgrp2').setPrice(34));
+            // without shipping cost calculation
+            expect(cart.calculate()).toBe(3*2*599+656*1*5+3*60+1*499+2*499);
+            // with shipping cost calculation
+            expect(cart.calculate(true)).toBe(3*2*599+656*1*5+3*60+1*499+67+2*499+34);
         });
 
         it('Check json-representation of cart', function () {

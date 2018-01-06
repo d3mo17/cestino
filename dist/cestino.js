@@ -431,18 +431,19 @@
      * Cart-API
      */
     Cart.prototype = {
-        add:                 _addProduct, /* Params: oProduct, oQuantity, sShippingGroup, aProductFeatures */
-        on:                  _on, /* Params: kind, fnListener */
-        off:                 _off, /* Params: kind, fnListener */
-        calculateGroup:      _calculateGroup, /* Params: sShippingGroup */
-        calculate:           _calculate, /* no params */
-        deletePosition:      _deletePosition, /* Params: sIdCartPosition */
-        getPositionsOfGroup: _getPositionsOfGroup, /* Params: sShippingGroup */
-        getShippingGroups:   _getGroups,
-        getPositionById:     _getPositionById, /* Params: sIdCartPosition */
-        toJSON:              _toJSON,
-        fromJSON:            _fromJSON,
-        walk:                _walk /* Params: fnCallback */
+        add:                    _addProduct, /* Params: oProduct, oQuantity, sShippingGroup, aProductFeatures */
+        on:                     _on, /* Params: kind, fnListener */
+        off:                    _off, /* Params: kind, fnListener */
+        calculateGroup:         _calculateGroup, /* Params: sShippingGroup */
+        calculate:              _calculate, /* no params */
+        deletePosition:         _deletePosition, /* Params: sIdCartPosition */
+        getShippingGroupByName: _getShippingGroupByName, /* Params: sShippingGroup */
+        getPositionsOfGroup:    _getPositionsOfGroup, /* Params: sShippingGroup */
+        getShippingGroups:      _getGroups,
+        getPositionById:        _getPositionById, /* Params: sIdCartPosition */
+        toJSON:                 _toJSON,
+        fromJSON:               _fromJSON,
+        walk:                   _walk /* Params: fnCallback */
     };
 
         // CartPosition-API
@@ -471,6 +472,7 @@
      * @borrows <anonymous>~_calculateGroup as calculateGroup
      * @borrows <anonymous>~_calculate as calculate
      * @borrows <anonymous>~_deletePosition as deletePosition
+     * @borrows <anonymous>~_getShippingGroupByName as getShippingGroupByName
      * @borrows <anonymous>~_getPositionsOfGroup as getPositionsOfGroup
      * @borrows <anonymous>~_getGroups as getShippingGroups
      * @borrows <anonymous>~_getPositionById as getPositionById
@@ -499,6 +501,11 @@
         this.oCartService = oService;
         /** @member {CartPosition[]} */
         this.positions = {};
+        /**
+         * @private
+         * @member {Object}
+         */
+        this[' shippingGroups'] = {};
         /** @member {Object} */
         this.listener = {
             /**
@@ -677,6 +684,98 @@
             return this.price;
         };
 
+    /**
+     * Represents information about a shipping group
+     *
+     * @constructor
+     * @global
+     * @private
+     * @param   {String=} sName
+     * @borrows module:Cestino~Cart.ShippingGroup#calculate as calculate
+     * @borrows module:Cestino~Cart.ShippingGroup#setPrice as setPrice
+     * @borrows module:Cestino~Cart.ShippingGroup#getPrice as getPrice
+     * @borrows module:Cestino~Cart.ShippingGroup#getName as getName
+     * @borrows module:Cestino~Cart.ShippingGroup#getCart as getCart
+     */
+    Cart.ShippingGroup = function (sName) {
+        /**
+         * @private
+         * @member {String}
+         */
+        this[' name'] = sName || '';
+        /**
+         * @private
+         * @member {Cart}
+         */
+        this[' cart'] = null;
+        /**
+         * @private
+         * @member {Integer}
+         */
+        this[' price'] = 0;
+    };
+
+        /**
+         * Returns the cost for the whole Shipping group
+         * 
+         * @method  ShippingGroup#calculate
+         * @param   {Boolean} includeShippingGroupCost
+         * @returns {Integer}
+         */
+        Cart.ShippingGroup.prototype.calculate = function () {
+            return _calculateGroup.call(
+                this.getCart(),
+                this.getName(),
+                includeShippingGroupCost || true
+            );
+        };
+
+        /**
+         * Sets the cost for shipping of a shipping group.
+         * 
+         * @method  ShippingGroup#setPrice
+         * @param   {Integer} price 
+         * @returns {ShippingGroup}
+         */
+        Cart.ShippingGroup.prototype.setPrice = function (price) {
+            if (! Util.isInt(price) || price < 0) {
+                throw new TypeError('The price has to be an positive integer!');
+            }
+            this[' price'] = price;
+            return this;
+        };
+
+        /**
+         * Returns the shipping cost for the group. Overwrite this method to add cost for shipping of a
+         * shipping group. You can access the current cart through method-call "this.getCart()".
+         * 
+         * @method  ShippingGroup#getPrice
+         * @returns {Integer}
+         */
+        Cart.ShippingGroup.prototype.getPrice = function () {
+            return this[' price'];
+        };
+
+        /**
+         * Returns the name of this shipping group.
+         * 
+         * @method  ShippingGroup#getName
+         * @returns {String}
+         */
+        Cart.ShippingGroup.prototype.getName = function () {
+            return this[' name'];
+        };
+
+        /**
+         * Returns the cart this shipping group belongs to.
+         * 
+         * @method  ShippingGroup#getCart
+         * @returns {Cart}
+         */
+        Cart.ShippingGroup.prototype.getCart = function () {
+            return this[' cart'];
+        };
+
 
         /**
          * Walks through all positions of the cart, calls passed function and puts position and group to
@@ -744,7 +843,7 @@
          * @fires   module:Cestino~load
          */
         function _fromJSON(sJSON) {
-            var that = this, oCart, oPosition, internGrpName;
+            var that = this, oCart, oPosition, oShippingGroup, internGrpName;
     
             if (Object.keys(this.positions).length !== 0) {
                 throw new RangeError('Cart has to be empty when loading from a JSON!');
@@ -753,6 +852,11 @@
             this.positionId = oCart.AutoPosId;
     
             Object.keys(oCart.pos).forEach(function (group) {
+                internGrpName = 'g'+group;
+                oShippingGroup = new Cart.ShippingGroup(group);
+                oShippingGroup[' cart'] = that;
+                that[' shippingGroups'][internGrpName] = oShippingGroup;
+
                 oCart.pos[group].forEach(function (position) {
                     oPosition = new CartPosition(
                         position.id,
@@ -768,7 +872,6 @@
                         )
                     );
                     oPosition.cart = that;
-                    internGrpName = 'g'+group;
                     that.positions[internGrpName] = that.positions[internGrpName] || [];
                     that.positions[internGrpName].push(oPosition);
                 });
@@ -804,19 +907,21 @@
          * @method  Cart#add
          * @param   {Product} oProduct
          * @param   {(ProductQuantity|Integer)} oQuantity
-         * @param   {String=} sShippingGroup default is ''
-         * @param   {ProductFeature[]}  [aProductFeatures=[]] default is []
+         * @param   {(ShippingGroup|String)} [oShippingGroup=""]
+         * @param   {ProductFeature[]}  [aProductFeatures=[]]
          * @returns {String} Id of generated Position
          * @public
          * @fires   module:Cestino~add
          */
         function _addProduct(
-            oProduct, oQuantity, sShippingGroup, aProductFeatures
+            oProduct, oQuantity, oShippingGroup, aProductFeatures
         ) {
             var posId, oPosition,
-                aProductFeatures = aProductFeatures || [],
-                group = 'g'+(sShippingGroup || ''),
-                oQuantity = oQuantity || (new Cart.ProductQuantity(1));
+                oQuantity = oQuantity || (new Cart.ProductQuantity(1)),
+                oShippingGroup = _getShippingGroupByName.call(this, oShippingGroup)
+                    || (new Cart.ShippingGroup(oShippingGroup)),
+                internGrpName = 'g'+oShippingGroup.getName(),
+                aProductFeatures = aProductFeatures || [];
 
             if (! (oProduct instanceof Cart.Product)) {
                 throw new TypeError('The product has to be a instance of Cart.Product!');
@@ -833,14 +938,17 @@
                 ].join(''));
             }
 
-            this.positions[group] = this.positions[group] || [];
+            oShippingGroup[' cart'] = this;
+            this[' shippingGroups'][internGrpName] = oShippingGroup;
+
+            this.positions[internGrpName] = this.positions[internGrpName] || [];
 
             posId = 'p'+(this.positionId++);
             oPosition = new CartPosition(
                 posId, oProduct, aProductFeatures, oQuantity
             );
             oPosition.cart = this;
-            this.positions[group].push(oPosition);
+            this.positions[internGrpName].push(oPosition);
             _notifyListeners.call(this, 'add', oPosition);
 
             return posId;
@@ -909,23 +1017,52 @@
 
 
         /**
+         * Returns a shipping-group by name.
+         * 
+         * @method  Cart#getShippingGroupByName
+         * @param   {(String|ShippingGroup)} sShippingGroup
+         * @returns {(false|ShippingGroup)}
+         */
+        function _getShippingGroupByName(sShippingGroup) {
+            var isInstance = sShippingGroup instanceof Cart.ShippingGroup,
+                internGrpName = 'g'+(isInstance && sShippingGroup.getName() || sShippingGroup || '');
+            
+            return internGrpName in this[' shippingGroups'] && this[' shippingGroups'][internGrpName]
+                || isInstance && sShippingGroup
+                || false;
+        }
+
+
+        /**
+         * Returns the intern name of a passed shipping-group.
+         * 
+         * @param {(String|ShippingGroup)} sShippingGroup 
+         * @private
+         */
+        function _getInternGroupName(sShippingGroup) {
+            var isInstance = sShippingGroup instanceof Cart.ShippingGroup;
+            return 'g'+(isInstance && sShippingGroup.getName() || sShippingGroup || '');
+        }
+
+
+        /**
          * Returns all positions of the pssed group.
          *
          * @method  Cart#getPositionsOfGroup
-         * @param   {String} sShippingGroup
+         * @param   {(String|ShippingGroup)} sShippingGroup
          * @returns {CartPosition[]}
          * @public
          */
         function _getPositionsOfGroup(sShippingGroup) {
-            var group = 'g'+(sShippingGroup || '');
+            var internGrpName = _getInternGroupName.call(this, sShippingGroup);
 
-            if (! (group in this.positions)) {
+            if (! (internGrpName in this.positions)) {
                 throw new ReferenceError(
                     ["No shipping-group with name '",sShippingGroup,"' found!"].join('')
                 )
             }
 
-            return this.positions[group];
+            return this.positions[internGrpName];
         }
 
 
@@ -933,18 +1070,23 @@
          * Calculates the subtotal of a shipping-group.
          *
          * @method  Cart#calculateGroup
-         * @param   {String} sShippingGroup
+         * @param   {(String|ShippingGroup)} sShippingGroup
+         * @param   {Boolean} includeShippingGroupCost
          * @returns {Integer}
          * @public
          */
-        function _calculateGroup(sShippingGroup) {
-            var subtotal = 0;
+        function _calculateGroup(sShippingGroup, includeShippingGroupCost) {
+            var subtotal = 0,
+                includeShippingGroupCost = includeShippingGroupCost || false,
+                internGrpName = _getInternGroupName.call(this, sShippingGroup);
 
             this.getPositionsOfGroup(sShippingGroup).forEach(function (ePosition) {
                 subtotal += ePosition.calculate();
             });
 
-            return subtotal;
+            return subtotal + (
+                includeShippingGroupCost && this[' shippingGroups'][internGrpName].getPrice() || 0
+            );
         }
 
 
@@ -952,14 +1094,16 @@
          * Calculates the total of the whole shopping-cart.
          *
          * @method  Cart#calculate
+         * @param   {Boolean} includeShippingGroupCost
          * @returns {Integer}
          * @public
          */
-        function _calculate() {
-            var that = this, total = 0;
+        function _calculate(includeShippingGroupCost) {
+            var that = this, total = 0,
+                includeShippingGroupCost = includeShippingGroupCost || false;
 
-            Object.keys(this.positions).forEach(function (sGroup) {
-                total += that.calculateGroup( sGroup.substr(1) );
+            _getGroups.call(this).forEach(function (oGroup) {
+                total += _calculateGroup.call(that, oGroup, includeShippingGroupCost);
             });
 
             return total;
@@ -1244,6 +1388,23 @@
              * @returns {ProductQuantity}
              */
             extendWith: _extendWith.bind(Cart.ProductQuantity)
+        },
+        /** @alias module:Cestino.ShippingGroup */
+        ShippingGroup: {
+            /**
+             * Creates an object of type Cart.ShippingGroup
+             * @alias   module:Cestino.ShippingGroup.create
+             * @param   {String} name
+             * @returns {ShippingGroup}
+             */
+            create: _createFactory('ShippingGroup'),
+            /**
+             * Extends class ShippingGroup by passed constructor
+             * @alias module:Cestino.ShippingGroup.extendWith      
+             * @param {*} subclassConstructor
+             * @returns {ShippingGroup}
+             */
+            extendWith: _extendWith.bind(Cart.ShippingGroup)
         },
         
         /**

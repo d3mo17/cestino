@@ -22,13 +22,15 @@
 <dd></dd>
 <dt><a href="#Cart">Cart</a> ℗</dt>
 <dd></dd>
+<dt><a href="#CartPosition">CartPosition</a> ℗</dt>
+<dd></dd>
 <dt><a href="#Product">Product</a> ℗</dt>
 <dd></dd>
 <dt><a href="#ProductQuantity">ProductQuantity</a> ℗</dt>
 <dd></dd>
 <dt><a href="#ProductFeature">ProductFeature</a> ℗</dt>
 <dd></dd>
-<dt><a href="#CartPosition">CartPosition</a> ℗</dt>
+<dt><a href="#ShippingGroup">ShippingGroup</a> ℗</dt>
 <dd></dd>
 <dt><a href="#PriceFormatter">PriceFormatter</a> ℗</dt>
 <dd></dd>
@@ -78,6 +80,9 @@ A basic shopping cart implementation in javascript.
         * [.ProductQuantity](#module_Cestino.ProductQuantity)
             * [.create](#module_Cestino.ProductQuantity.create) ⇒ [<code>ProductQuantity</code>](#ProductQuantity)
             * [.extendWith](#module_Cestino.ProductQuantity.extendWith) ⇒ [<code>ProductQuantity</code>](#ProductQuantity)
+        * [.ShippingGroup](#module_Cestino.ShippingGroup)
+            * [.create](#module_Cestino.ShippingGroup.create) ⇒ [<code>ShippingGroup</code>](#ShippingGroup)
+            * [.extendWith](#module_Cestino.ShippingGroup.extendWith) ⇒ [<code>ShippingGroup</code>](#ShippingGroup)
         * [.create(oService)](#module_Cestino.create) ⇒ [<code>Cart</code>](#Cart)
         * ~~[.createProduct()](#module_Cestino.createProduct)~~
         * ~~[.createProductFeature()](#module_Cestino.createProductFeature)~~
@@ -241,6 +246,46 @@ Creates an object of type Cart.ProductQuantity
 Extends class ProductQuantity by passed constructor
 
 **Kind**: static property of [<code>ProductQuantity</code>](#module_Cestino.ProductQuantity)  
+
+| Param | Type |
+| --- | --- |
+| subclassConstructor | <code>\*</code> | 
+
+
+* * *
+
+<a name="module_Cestino.ShippingGroup"></a>
+
+### Cestino.ShippingGroup
+**Kind**: static property of [<code>Cestino</code>](#module_Cestino)  
+
+* [.ShippingGroup](#module_Cestino.ShippingGroup)
+    * [.create](#module_Cestino.ShippingGroup.create) ⇒ [<code>ShippingGroup</code>](#ShippingGroup)
+    * [.extendWith](#module_Cestino.ShippingGroup.extendWith) ⇒ [<code>ShippingGroup</code>](#ShippingGroup)
+
+
+* * *
+
+<a name="module_Cestino.ShippingGroup.create"></a>
+
+#### ShippingGroup.create ⇒ [<code>ShippingGroup</code>](#ShippingGroup)
+Creates an object of type Cart.ShippingGroup
+
+**Kind**: static property of [<code>ShippingGroup</code>](#module_Cestino.ShippingGroup)  
+
+| Param | Type |
+| --- | --- |
+| name | <code>String</code> | 
+
+
+* * *
+
+<a name="module_Cestino.ShippingGroup.extendWith"></a>
+
+#### ShippingGroup.extendWith ⇒ [<code>ShippingGroup</code>](#ShippingGroup)
+Extends class ShippingGroup by passed constructor
+
+**Kind**: static property of [<code>ShippingGroup</code>](#module_Cestino.ShippingGroup)  
 
 | Param | Type |
 | --- | --- |
@@ -576,17 +621,19 @@ Updates the cart with actual valid information about products.
     * [.positionId](#Cart+positionId) : <code>Integer</code>
     * [.oCartService](#Cart+oCartService) : <code>Object</code>
     * [.positions](#Cart+positions) : [<code>Array.&lt;CartPosition&gt;</code>](#CartPosition)
+    * [. shippingGroups](#Cart+ shippingGroups) : <code>Object</code> ℗
     * [.listener](#Cart+listener) : <code>Object</code>
     * [.walk(fnCallback)](#Cart+walk) ⇒ [<code>Cart</code>](#Cart)
     * [.toJSON()](#Cart+toJSON) ⇒ <code>String</code>
     * [.fromJSON(sJSON)](#Cart+fromJSON) ⇒ [<code>Cart</code>](#Cart)
-    * [.add(oProduct, oQuantity, [sShippingGroup], [aProductFeatures])](#Cart+add) ⇒ <code>String</code>
+    * [.add(oProduct, oQuantity, [oShippingGroup], [aProductFeatures])](#Cart+add) ⇒ <code>String</code>
     * [.on(kind, fnListener)](#Cart+on) ⇒ [<code>Cart</code>](#Cart)
     * [.off(kind, fnListener)](#Cart+off) ⇒ [<code>Cart</code>](#Cart)
     * [.getShippingGroups()](#Cart+getShippingGroups) ⇒ <code>Array.&lt;String&gt;</code>
+    * [.getShippingGroupByName(sShippingGroup)](#Cart+getShippingGroupByName) ⇒ <code>false</code> \| [<code>ShippingGroup</code>](#ShippingGroup)
     * [.getPositionsOfGroup(sShippingGroup)](#Cart+getPositionsOfGroup) ⇒ [<code>Array.&lt;CartPosition&gt;</code>](#CartPosition)
-    * [.calculateGroup(sShippingGroup)](#Cart+calculateGroup) ⇒ <code>Integer</code>
-    * [.calculate()](#Cart+calculate) ⇒ <code>Integer</code>
+    * [.calculateGroup(sShippingGroup, includeShippingGroupCost)](#Cart+calculateGroup) ⇒ <code>Integer</code>
+    * [.calculate(includeShippingGroupCost)](#Cart+calculate) ⇒ <code>Integer</code>
     * [.deletePosition(sIdCartPosition)](#Cart+deletePosition) ⇒ [<code>CartPosition</code>](#CartPosition)
     * [.getPositionById(sIdCartPosition)](#Cart+getPositionById) ⇒ [<code>CartPosition</code>](#CartPosition)
     * [.replaceQuantity(oQuantity)](#Cart+replaceQuantity) ⇒ [<code>CartPosition</code>](#CartPosition)
@@ -631,6 +678,14 @@ own.
 
 ### cart.positions : [<code>Array.&lt;CartPosition&gt;</code>](#CartPosition)
 **Kind**: instance property of [<code>Cart</code>](#Cart)  
+
+* * *
+
+<a name="Cart+ shippingGroups"></a>
+
+### cart. shippingGroups : <code>Object</code> ℗
+**Kind**: instance property of [<code>Cart</code>](#Cart)  
+**Access**: private  
 
 * * *
 
@@ -686,7 +741,7 @@ Build the cart from JSON
 
 <a name="Cart+add"></a>
 
-### cart.add(oProduct, oQuantity, [sShippingGroup], [aProductFeatures]) ⇒ <code>String</code>
+### cart.add(oProduct, oQuantity, [oShippingGroup], [aProductFeatures]) ⇒ <code>String</code>
 Creates a position in the cart
 
 **Kind**: instance method of [<code>Cart</code>](#Cart)  
@@ -694,12 +749,12 @@ Creates a position in the cart
 **Emits**: [<code>add</code>](#module_Cestino..event_add)  
 **Access**: public  
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| oProduct | [<code>Product</code>](#Product) |  |  |
-| oQuantity | [<code>ProductQuantity</code>](#ProductQuantity) \| <code>Integer</code> |  |  |
-| [sShippingGroup] | <code>String</code> |  | default is '' |
-| [aProductFeatures] | [<code>Array.&lt;ProductFeature&gt;</code>](#ProductFeature) | <code>[]</code> | default is [] |
+| Param | Type | Default |
+| --- | --- | --- |
+| oProduct | [<code>Product</code>](#Product) |  | 
+| oQuantity | [<code>ProductQuantity</code>](#ProductQuantity) \| <code>Integer</code> |  | 
+| [oShippingGroup] | [<code>ShippingGroup</code>](#ShippingGroup) \| <code>String</code> | <code>&quot;&quot;</code> | 
+| [aProductFeatures] | [<code>Array.&lt;ProductFeature&gt;</code>](#ProductFeature) | <code>[]</code> | 
 
 
 * * *
@@ -748,6 +803,20 @@ Get all defined groups.
 
 * * *
 
+<a name="Cart+getShippingGroupByName"></a>
+
+### cart.getShippingGroupByName(sShippingGroup) ⇒ <code>false</code> \| [<code>ShippingGroup</code>](#ShippingGroup)
+Returns a shipping-group by name.
+
+**Kind**: instance method of [<code>Cart</code>](#Cart)  
+
+| Param | Type |
+| --- | --- |
+| sShippingGroup | <code>String</code> \| [<code>ShippingGroup</code>](#ShippingGroup) | 
+
+
+* * *
+
 <a name="Cart+getPositionsOfGroup"></a>
 
 ### cart.getPositionsOfGroup(sShippingGroup) ⇒ [<code>Array.&lt;CartPosition&gt;</code>](#CartPosition)
@@ -758,14 +827,14 @@ Returns all positions of the pssed group.
 
 | Param | Type |
 | --- | --- |
-| sShippingGroup | <code>String</code> | 
+| sShippingGroup | <code>String</code> \| [<code>ShippingGroup</code>](#ShippingGroup) | 
 
 
 * * *
 
 <a name="Cart+calculateGroup"></a>
 
-### cart.calculateGroup(sShippingGroup) ⇒ <code>Integer</code>
+### cart.calculateGroup(sShippingGroup, includeShippingGroupCost) ⇒ <code>Integer</code>
 Calculates the subtotal of a shipping-group.
 
 **Kind**: instance method of [<code>Cart</code>](#Cart)  
@@ -773,18 +842,24 @@ Calculates the subtotal of a shipping-group.
 
 | Param | Type |
 | --- | --- |
-| sShippingGroup | <code>String</code> | 
+| sShippingGroup | <code>String</code> \| [<code>ShippingGroup</code>](#ShippingGroup) | 
+| includeShippingGroupCost | <code>Boolean</code> | 
 
 
 * * *
 
 <a name="Cart+calculate"></a>
 
-### cart.calculate() ⇒ <code>Integer</code>
+### cart.calculate(includeShippingGroupCost) ⇒ <code>Integer</code>
 Calculates the total of the whole shopping-cart.
 
 **Kind**: instance method of [<code>Cart</code>](#Cart)  
 **Access**: public  
+
+| Param | Type |
+| --- | --- |
+| includeShippingGroupCost | <code>Boolean</code> | 
+
 
 * * *
 
@@ -865,6 +940,30 @@ Decrementing amount of cart position.
 | Param | Type |
 | --- | --- |
 | amount | <code>Integer</code> | 
+
+
+* * *
+
+<a name="CartPosition"></a>
+
+## CartPosition ℗
+**Kind**: global class  
+**Access**: private  
+
+* * *
+
+<a name="new_CartPosition_new"></a>
+
+### new CartPosition(sId, oProduct, aFeatures, oQuantity)
+The cart reference will be injected on instancing separately.
+
+
+| Param | Type |
+| --- | --- |
+| sId | <code>String</code> | 
+| oProduct | [<code>Product</code>](#Product) | 
+| aFeatures | [<code>Array.&lt;ProductFeature&gt;</code>](#ProductFeature) | 
+| oQuantity | [<code>ProductQuantity</code>](#ProductQuantity) | 
 
 
 * * *
@@ -985,27 +1084,116 @@ the cart calculation to your needs
 
 * * *
 
-<a name="CartPosition"></a>
+<a name="ShippingGroup"></a>
 
-## CartPosition ℗
+## ShippingGroup ℗
 **Kind**: global class  
 **Access**: private  
 
+* [ShippingGroup](#ShippingGroup) ℗
+    * [new Cart.ShippingGroup([sName])](#new_ShippingGroup_new)
+    * [. name](#ShippingGroup+ name) : <code>String</code> ℗
+    * [. cart](#ShippingGroup+ cart) : [<code>Cart</code>](#Cart) ℗
+    * [. price](#ShippingGroup+ price) : <code>Integer</code> ℗
+    * [.calculate(includeShippingGroupCost)](#ShippingGroup+calculate) ⇒ <code>Integer</code>
+    * [.setPrice(price)](#ShippingGroup+setPrice) ⇒ [<code>ShippingGroup</code>](#ShippingGroup)
+    * [.getPrice()](#ShippingGroup+getPrice) ⇒ <code>Integer</code>
+    * [.getName()](#ShippingGroup+getName) ⇒ <code>String</code>
+    * [.getCart()](#ShippingGroup+getCart) ⇒ [<code>Cart</code>](#Cart)
+
+
 * * *
 
-<a name="new_CartPosition_new"></a>
+<a name="new_ShippingGroup_new"></a>
 
-### new CartPosition(sId, oProduct, aFeatures, oQuantity)
-The cart reference will be injected on instancing separately.
+### new Cart.ShippingGroup([sName])
+Represents information about a shipping group
 
 
 | Param | Type |
 | --- | --- |
-| sId | <code>String</code> | 
-| oProduct | [<code>Product</code>](#Product) | 
-| aFeatures | [<code>Array.&lt;ProductFeature&gt;</code>](#ProductFeature) | 
-| oQuantity | [<code>ProductQuantity</code>](#ProductQuantity) | 
+| [sName] | <code>String</code> | 
 
+
+* * *
+
+<a name="ShippingGroup+ name"></a>
+
+### shippingGroup. name : <code>String</code> ℗
+**Kind**: instance property of [<code>ShippingGroup</code>](#ShippingGroup)  
+**Access**: private  
+
+* * *
+
+<a name="ShippingGroup+ cart"></a>
+
+### shippingGroup. cart : [<code>Cart</code>](#Cart) ℗
+**Kind**: instance property of [<code>ShippingGroup</code>](#ShippingGroup)  
+**Access**: private  
+
+* * *
+
+<a name="ShippingGroup+ price"></a>
+
+### shippingGroup. price : <code>Integer</code> ℗
+**Kind**: instance property of [<code>ShippingGroup</code>](#ShippingGroup)  
+**Access**: private  
+
+* * *
+
+<a name="ShippingGroup+calculate"></a>
+
+### shippingGroup.calculate(includeShippingGroupCost) ⇒ <code>Integer</code>
+Returns the cost for the whole Shipping group
+
+**Kind**: instance method of [<code>ShippingGroup</code>](#ShippingGroup)  
+
+| Param | Type |
+| --- | --- |
+| includeShippingGroupCost | <code>Boolean</code> | 
+
+
+* * *
+
+<a name="ShippingGroup+setPrice"></a>
+
+### shippingGroup.setPrice(price) ⇒ [<code>ShippingGroup</code>](#ShippingGroup)
+Sets the cost for shipping of a shipping group.
+
+**Kind**: instance method of [<code>ShippingGroup</code>](#ShippingGroup)  
+
+| Param | Type |
+| --- | --- |
+| price | <code>Integer</code> | 
+
+
+* * *
+
+<a name="ShippingGroup+getPrice"></a>
+
+### shippingGroup.getPrice() ⇒ <code>Integer</code>
+Returns the shipping cost for the group. Overwrite this method to add cost for shipping of a
+shipping group. You can access the current cart through method-call "this.getCart()".
+
+**Kind**: instance method of [<code>ShippingGroup</code>](#ShippingGroup)  
+
+* * *
+
+<a name="ShippingGroup+getName"></a>
+
+### shippingGroup.getName() ⇒ <code>String</code>
+Returns the name of this shipping group.
+
+**Kind**: instance method of [<code>ShippingGroup</code>](#ShippingGroup)  
+
+* * *
+
+<a name="ShippingGroup+getCart"></a>
+
+### shippingGroup.getCart() ⇒ [<code>Cart</code>](#Cart)
+Returns the cart this shipping group belongs to.
+
+**Kind**: instance method of [<code>ShippingGroup</code>](#ShippingGroup)  
 
 * * *
 
