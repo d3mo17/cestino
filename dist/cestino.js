@@ -456,11 +456,11 @@
 
 
     /**
-     * Class to manage a shopping cart. The cart only supports
-     * product-positions separated in shipping-groups. The prices were
-     * handled without tax.
-     * You have to implement prices for shipping and for payment on your
-     * own.
+     * Class to manage a shopping cart. The cart only supports product-positions
+     * separated by shipping-groups.
+     * All prices were handled without tax; Extend the model to consider tax
+     * calculation.
+     * You have to implement costs of payment on your own.
      *
      * @constructor
      * @global

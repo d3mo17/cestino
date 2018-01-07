@@ -140,9 +140,9 @@ How to enrich the product data, see script "src/BasicCartService.js".
 
 ### Extending the model
 
-If you want to extend the model classes, you can use the method ```extendWith```
-of ```Cestino.Product```, ```Cestino.ProductFeature``` and/or
-```Cestino.ProductQuantity```.
+If you want to extend the model classes, you can use the method ```extendWith``` of
+```Cestino.Product```, ```Cestino.ProductFeature```,```Cestino.ProductQuantity```
+and/or ```Cestino.ShippingGroup```.
 These methods will return an object with a method named ```create```, so you can
 use your subclasses like the classes shipped with Cestino.
 Note that your extending constructors do not need to have any arguments, the
