@@ -55,7 +55,7 @@ function cartTest (Cart, Repo) {
         it('adding a first product', function () {
             expect(function () {
                 cart.on('add', function (oPosition) {
-                    actionsMap.lastAddedPositionID = oPosition.id;
+                    actionsMap.lastAddedPositionID = oPosition.getId();
                 });
             }).not.toThrowError(Error);
             expect(actionsMap.lastAddedPositionID).toBe(false);
@@ -85,7 +85,7 @@ function cartTest (Cart, Repo) {
         it('remove a product', function () {
             expect(function() {
                 cart.on('remove', function (oPosition) {
-                    actionsMap.lastRemovedPositionID = oPosition.id;
+                    actionsMap.lastRemovedPositionID = oPosition.getId();
                 });
             }).not.toThrowError(Error);
             expect(actionsMap.lastRemovedPositionID).toBe(false);
@@ -98,7 +98,7 @@ function cartTest (Cart, Repo) {
         it('increment amount in cart position', function () {
             expect(function() {
                 cart.on('change', function (oPosition) {
-                    actionsMap.lastChangedPositionID = oPosition.id;
+                    actionsMap.lastChangedPositionID = oPosition.getId();
                 });
             }).not.toThrowError(Error);
             cart.getPositionById(positionIDs[2]).incrementAmount();
@@ -132,6 +132,14 @@ function cartTest (Cart, Repo) {
             expect(function () { cart.add(''); }).toThrowError(Error);
         });
 
+        it('create shipping group', function () {
+            var grp = Cart.ShippingGroup.create('TestShipping');
+
+            expect(grp.getName()).toBe('TestShipping');
+            grp.setPrice(193);
+            expect(grp.getPrice()).toBe(193);
+        });
+
         it('add products to a separate shipping groups and calculate costs', function () {
             cart.add(genProducts[2], 3, Cart.ShippingGroup.create('shgrp').setPrice(67));
             cart.add(genProducts[0], 1, 'shgrp');
@@ -160,6 +168,8 @@ function cartTest (Cart, Repo) {
                 .toThrowError(Error);
         });
 
+        // TODO: find product and delete product
+
         it('Check json-representation of cart', function () {
             var cartJSON,
                 cart = Cart.create();
@@ -182,7 +192,7 @@ function cartTest (Cart, Repo) {
                 var i = 0, productTitles = ['Test 1', 'Test 2'];
                 expect(cart.calculate()).toBe(456*4+1*333);
                 cart.walk(function (position) {
-                    expect(position.product.title).toBe(productTitles[i++]);
+                    expect(position.getProduct().getTitle()).toBe(productTitles[i++]);
                 });
 
                 done();
@@ -209,12 +219,12 @@ function cartTest (Cart, Repo) {
             Product = Cart.Product.extendWith(ExtendedProduct);
 
             p = Product.create(12, 'Test extended', 595, '/thumbs/test.png');
-            expect(p.id).toBe(12);
+            expect(p.getId()).toBe(12);
             expect(p.getImg()).toBe('/thumbs/test.png');
             expect(JSON.stringify(p)).toEqual(JSON.stringify({
-                id: 12,
-                title: 'Test extended',
-                price: 595,
+                " id": 12,
+                " title": 'Test extended',
+                " price": 595,
                 imgSrc: '/thumbs/test.png'
             }));
 
@@ -222,7 +232,7 @@ function cartTest (Cart, Repo) {
                 this.unit = unit;
             }
             ExtendedProductQuantity.prototype.getCubicUnit = function() {
-                return (this.dimensionX * this.dimensionY * this.dimensionZ)
+                return (this.getWidth() * this.getHeight() * this.getDepth())
                     + ' ' + this.unit + '³';
             }
 

@@ -49,11 +49,11 @@
         }
 
         /** @member {Integer} */
-        this.decimalCount = decimalCount;
+        this[' decimalCount'] = decimalCount;
         /** @member {String} */
-        this.thousandsSeperator = thousandsSeperator;
+        this[' thousandsSeperator'] = thousandsSeperator;
         /** @member {String} */
-        this.decimalSeperator = decimalSeperator;
+        this[' decimalSeperator'] = decimalSeperator;
     }
 
     /**
@@ -97,12 +97,12 @@
             throw new TypeError('Parameter int has to be an Int!');
         }
 
-        currencyValue = parseInt((int + '').slice(0, this.decimalCount * -1));
+        currencyValue = parseInt((int + '').slice(0, this[' decimalCount'] * -1));
 
         return [
-            _chunks(currencyValue, 3).join(this.thousandsSeperator),
-            this.decimalSeperator,
-            Util.lpad(int % Math.pow(10, this.decimalCount), this.decimalCount)
+            _chunks(currencyValue, 3).join(this[' thousandsSeperator']),
+            this[' decimalSeperator'],
+            Util.lpad(int % Math.pow(10, this[' decimalCount']), this[' decimalCount'])
         ].join('');
     }
 

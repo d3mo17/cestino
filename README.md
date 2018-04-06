@@ -171,8 +171,9 @@ Example:
     }
     ProductQuantityInInch.prototype.getFactor = function () {
         // calculate inch price instead of centimeter price
-        return this.amount * Math.round(
-            this.dimensionX * this.dimensionY * this.dimensionZ * Math.pow(2.54, 3),
+        return this.getAmount() * Math.round(
+            this.getWidth() * this.getHeight() * this.getDepth()
+            * Math.pow(2.54, 3),
             10
         );
     }
@@ -185,7 +186,10 @@ Example:
         this.tax = tax;
     }
     ProductWithTax.prototype.getPrice = function () {
-        return Math.round(this.price * this.tax.getFactor(), 10);
+        return Math.round(
+            this.getSuperMethod('getPrice')() * this.tax.getFactor(),
+            10
+        );
     };
     TaxProduct = Cestino.Product.extendWith(ProductWithTax);
     

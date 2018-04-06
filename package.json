@@ -8,13 +8,14 @@
   },
   "scripts": {
     "test": "node_modules/karma/bin/karma start --singleRun && node_modules/.bin/jasmine --config='jasmine-node.json' && node_modules/karma/bin/karma start karma.conf.browserify.js --singleRun && node_modules/karma/bin/karma start karma.conf.global.js --singleRun",
-    "document": "node_modules/jsdoc-to-markdown/bin/cli.js --no-cache --separators --private src/*.js > api.md"
+    "document": "node_modules/jsdoc-to-markdown/bin/cli.js --no-cache --separators --private src/*.js > api.md",
+    "distribute": "node_modules/gulp/bin/gulp.js distribute"
   },
   "directories": {
     "test": "test"
   },
   "main": "./src/Cart.js",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "dependencies": {
     "atomicjs": "^3.2.1",
     "bluebird": "^3.3.4"
@@ -22,19 +23,19 @@
   "devDependencies": {
     "browserify": "^14.5.0",
     "gulp": "~3.9.1",
-    "jasmine": "^2.8.0",
-    "jasmine-core": "^2.5.2",
-    "jsdoc-to-markdown": "^3.0.3",
+    "jasmine": "^2.99.0",
+    "jasmine-core": "^2.99.1",
+    "jsdoc-to-markdown": "^3.0.4",
     "jsdom": "^9.9.1",
     "karma": "^1.4.0",
-    "karma-browserify": "^5.1.1",
+    "karma-browserify": "^5.2.0",
     "karma-jasmine": "^1.1.0",
     "karma-jsdom-launcher": "^5.0.0",
     "karma-phantomjs-launcher": "^1.0.2",
     "karma-requirejs": "^1.1.0",
     "phantomjs": "^2.1.7",
     "requirejs": "^2.2.0",
-    "watchify": "^3.9.0"
+    "watchify": "^3.10.0"
   },
   "keywords": [
     "shopping",
