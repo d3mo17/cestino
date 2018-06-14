@@ -1,12 +1,12 @@
 define(
-    ['bluebird/js/browser/bluebird.core.min', 'atomicjs/dist/atomic.min'],
+    ['bluebird/js/browser/bluebird.core.min', 'atomic/dist/atomic.min'],
     function (Promise, Atomic) {
         describe('Test whether', function () {
             it('lib atomic can be load and used', function (done) {
-                Atomic.ajax({url: 'base/test/CartData.json'})
-                    .error(done.fail)
-                    .success(function(response) {
-                        expect(response).toEqual({
+                Atomic('base/test/CartData.json')
+                    .catch(done.fail)
+                    .then(function(response) {
+                        expect(response.data).toEqual({
                             "3": {
                                 "title": "Test 1",
                                 "price": 456,

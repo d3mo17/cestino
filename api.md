@@ -41,7 +41,7 @@
 ## Cestino/BasicCartService
 Fetch masterdata from an external resource and put it to the cart model.
 
-**Requires**: <code>module:bluebird</code>, <code>module:atomicjs</code>  
+**Requires**: <code>module:bluebird</code>, <code>module:atomic</code>  
 
 * * *
 

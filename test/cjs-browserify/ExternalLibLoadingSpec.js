@@ -1,12 +1,12 @@
 describe('Test whether', function () {
-    var Atomic = require('../../node_modules/atomicjs/dist/atomic.min'),
+    var Atomic = require('../../node_modules/atomic/dist/atomic.min'),
         Promise = require('../../node_modules/bluebird/js/browser/bluebird.min');
 
     it('lib atomic can be load and used', function (done) {
-        Atomic.ajax({url: 'base/test/CartData.json'})
-            .error(done.fail)
-            .success(function(response) {
-                expect(response).toEqual({
+        Atomic('base/test/CartData.json')
+            .catch(done.fail)
+            .then(function(response) {
+                expect(response.data).toEqual({
                     "3": {
                         "title": "Test 1",
                         "price": 456,

@@ -20,7 +20,7 @@ module.exports = function(config) {
       {pattern: 'test/cjs-browserify/**/*Spec.js'},
       {pattern: 'src/**/*.js', included: false},
       {pattern: 'dist/**/*.js', included: false},
-      {pattern: 'node_modules/atomicjs/dist/*.js', included: false},
+      {pattern: 'node_modules/atomic/dist/*.js', included: false},
       {pattern: 'node_modules/bluebird/js/browser/*.js', included: false}
     ],
 

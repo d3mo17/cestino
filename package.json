@@ -15,9 +15,9 @@
     "test": "test"
   },
   "main": "./src/Cart.js",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "dependencies": {
-    "atomicjs": "^3.2.1",
+    "atomic": "github:cferdinandi/atomic#v4.2.1",
     "bluebird": "^3.3.4"
   },
   "devDependencies": {

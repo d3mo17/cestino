@@ -39,7 +39,7 @@ gulp.task('distribute', function () {
             paths: {
                 'cestino': '.',
                 'bluebird/js/browser/bluebird.min': 'empty:',
-                'atomicjs/dist/atomic.min': 'empty:'
+                'atomic/dist/atomic.min': 'empty:'
             },
             include: ['cestino/BasicCartService', 'cestino/Cart', 'cestino/PriceFormatter'],
             out: 'dist/'+targetFile,
