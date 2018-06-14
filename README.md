@@ -7,6 +7,7 @@ A basic shopping cart implementation in javascript.
 * Flexible service to put master data of products into the cart model
 * Positions can be grouped (e. g. by delivery time)
 * All price calculations make use of integer values instead of floats
+* Event-driven to keep track of changes made to the cart
 * Possibility to manage quantity and/or dimensions with the positions of products
 * Formatting of integer-prices / Integer to custom-format
 * Optional to put additional features (with prices) for products in cart-positions
