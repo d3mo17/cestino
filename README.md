@@ -220,7 +220,7 @@ Example:
 If you want to distribute your changes in the 'dist'-directory, you can use gulp:
 
 ```shell
-    $ gulp distribute
+    $ npm run build
 ```
 
 ### Testing
