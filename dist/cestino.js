@@ -9,11 +9,11 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         define(
-            'cestino/BasicCartService',['bluebird/js/browser/bluebird.min', 'atomicjs/dist/atomic.min'],
+            'cestino/BasicCartService',['bluebird/js/browser/bluebird.min', 'atomic/dist/atomic.min'],
             factory
         );
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(require('bluebird'), require('atomicjs'));
+        module.exports = factory(require('bluebird'), require('atomic'));
     } else {
         root.Cestino = root.Cestino || {};
         root.Cestino.BasicCartService = factory(root.Promise, root.atomic);
@@ -26,12 +26,16 @@
         url: ''
     };
 
+    if (typeof window !== 'undefined') {
+        window.Promise = window.Promise || Promise;
+    }
+
     /**
      * Fetch masterdata from an external resource and put it to the cart model.
      * 
      * @module   Cestino/BasicCartService
      * @requires bluebird
-     * @requires atomicjs
+     * @requires atomic
      */
 
 
@@ -58,9 +62,9 @@
         // clone defaults ... (Does only work with plain objects, don't use it e. g. to clone
         // Date-object values)
         /** @member {Object} */
-        this.options = JSON.parse(JSON.stringify(defaults));
+        this[' options'] = JSON.parse(JSON.stringify(defaults));
         for (attr in options) {
-            this.options[attr] = options[attr];
+            this[' options'][attr] = options[attr];
         }
     }
 
@@ -76,28 +80,28 @@
             oCart.walk(function (oPosition) {
                 var product, deletedFeatures = [], del;
 
-                if (! (oPosition.product.id in data)) {
-                    oCart.deletePosition(oPosition.id);
+                if (! (oPosition.getProduct().getId() in data)) {
+                    oCart.deletePosition(oPosition.getId());
                     return;
                 }
 
-                product = data[oPosition.product.id];
+                product = data[oPosition.getProduct().getId()];
 
-                oPosition.product.title = product.title;
-                oPosition.product.price = product.price;
-                oPosition.features.forEach(function (oFeature, idx) {
-                    if (! (oFeature.id in product.features)) {
+                oPosition.getProduct()[' title'] = product.title;
+                oPosition.getProduct()[' price'] = product.price;
+                oPosition.getFeatures().forEach(function (oFeature, idx) {
+                    if (! (oFeature.getId() in product.features)) {
                         deletedFeatures.push(idx);
                         return; // continue
                     }
 
-                    oFeature.label = product.features[oFeature.id].label;
-                    oFeature.price = product.features[oFeature.id].price;
+                    oFeature[' label'] = product.features[oFeature.getId()].label;
+                    oFeature[' price'] = product.features[oFeature.getId()].price;
                 });
 
                 del = deletedFeatures.pop();
                 while (del) {
-                    oPosition.features.splice(del, 1)[0];
+                    oPosition[' features'].splice(del, 1)[0];
                     del = deletedFeatures.pop();
                 }
             });
@@ -115,17 +119,17 @@
             var that = this, data = {};
 
             oCart.walk(function (oPosition) {
-                data[oPosition.product.id] = oPosition.features.map(function (oFeature) {
-                    return oFeature.id;
+                data[oPosition.getProduct().getId()] = oPosition.getFeatures().map(function (oFeature) {
+                    return oFeature.getId();
                 });
             });
 
             return new Promise(function (resolve, reject) {
-                Atomic.ajax({url: that.options.url, type: 'POST', data: data})
-                    .error(reject)
-                    .success(function(response) {
-                        _mergeDataInCart.call(that, response, oCart);
-                        resolve(response);
+                Atomic(that[' options'].url, {method: 'POST', data: data})
+                    .catch(reject)
+                    .then(function(response) {
+                        _mergeDataInCart.call(that, response.data, oCart);
+                        resolve(response.data);
                     });
             });
         }
@@ -283,11 +287,11 @@
         }
 
         /** @member {Integer} */
-        this.decimalCount = decimalCount;
+        this[' decimalCount'] = decimalCount;
         /** @member {String} */
-        this.thousandsSeperator = thousandsSeperator;
+        this[' thousandsSeperator'] = thousandsSeperator;
         /** @member {String} */
-        this.decimalSeperator = decimalSeperator;
+        this[' decimalSeperator'] = decimalSeperator;
     }
 
     /**
@@ -331,12 +335,12 @@
             throw new TypeError('Parameter int has to be an Int!');
         }
 
-        currencyValue = parseInt((int + '').slice(0, this.decimalCount * -1));
+        currencyValue = parseInt((int + '').slice(0, this[' decimalCount'] * -1));
 
         return [
-            _chunks(currencyValue, 3).join(this.thousandsSeperator),
-            this.decimalSeperator,
-            Util.lpad(int % Math.pow(10, this.decimalCount), this.decimalCount)
+            _chunks(currencyValue, 3).join(this[' thousandsSeperator']),
+            this[' decimalSeperator'],
+            Util.lpad(int % Math.pow(10, this[' decimalCount']), this[' decimalCount'])
         ].join('');
     }
 
@@ -492,22 +496,22 @@
         }
 
         /** @member {Integer} */
-        this.positionId = 1;
+        this[' positionId'] = 1;
 
         /**
          * @member {Object}
          * @instance
          */
-        this.oCartService = oService;
+        this[' oCartService'] = oService;
         /** @member {CartPosition[]} */
-        this.positions = {};
+        this[' positions'] = {};
         /**
          * @private
          * @member {Object}
          */
         this[' shippingGroups'] = {};
         /** @member {Object} */
-        this.listener = {
+        this[' listener'] = {
             /**
              * Event reporting that a product has been add to cart.
              *
@@ -550,12 +554,52 @@
          * @param   {ProductQuantity} oQuantity
          */
         function CartPosition(sId, oProduct, aFeatures, oQuantity) {
-            this.id       = sId;
-            this.product  = oProduct;
-            this.features = aFeatures;
-            this.quantity = oQuantity;
-            this.cart     = null;
+            this[' id']       = sId;
+            this[' product']  = oProduct;
+            this[' features'] = aFeatures;
+            this[' quantity'] = oQuantity;
+            this[' cart']     = null;
         }
+
+            /**
+             * @method CartPosition#getId
+             * @returns {String}
+             */
+            CartPosition.prototype.getId = function() {
+                return this[' id'];
+            };
+
+            /**
+             * @method CartPosition#getProduct
+             * @returns {Product}
+             */
+            CartPosition.prototype.getProduct = function() {
+                return this[' product'];
+            };
+
+            /**
+             * @method CartPosition#getFeatures
+             * @returns {ProductFeature[]}
+             */
+            CartPosition.prototype.getFeatures = function() {
+                return this[' features'];
+            };
+
+            /**
+             * @method CartPosition#getQuantity
+             * @returns {ProductQuantity}
+             */
+            CartPosition.prototype.getQuantity = function() {
+                return this[' quantity'];
+            };
+
+            /**
+             * @method CartPosition#getCart
+             * @returns {Cart}
+             */
+            CartPosition.prototype.getCart = function() {
+                return this[' cart'];
+            };
 
     /**
      * Class to describe a product that was add to cart.
@@ -567,6 +611,7 @@
      * @param   {String} title
      * @param   {Integer} price
      * @borrows module:Cestino~Cart.Product#getPrice as getPrice
+     * @borrows module:Cestino~Cart.Product#getTitle as getTitle
      */
     Cart.Product = function (id, title, price) {
         if (Util.isEmpty(id) || (typeof id !== 'string' && ! Util.isInt(id))) {
@@ -579,11 +624,28 @@
             throw new TypeError('The price has to be an positive integer!');
         }
 
-        this.id    = id;
-        this.title = title;
+        this[' id']    = id;
+        this[' title'] = title;
         // Integers only (cents)!
-        this.price = price;
+        this[' price'] = price;
     };
+
+        /**
+         * @method Product#getId
+         * @returns {String}
+         */
+        Cart.Product.prototype.getId = function () {
+            return this[' id'];
+        };
+
+        /**
+         * Returns the title of the product.
+         * @method  Product#getTitle
+         * @returns {String}
+         */
+        Cart.Product.prototype.getTitle = function () {
+            return this[' title'];
+        };
 
         /**
          * Returns the price of the product. Overwrite this method to modify the cart calculation
@@ -592,7 +654,7 @@
          * @returns {Integer}
          */
         Cart.Product.prototype.getPrice = function () {
-            return this.price;
+            return this[' price'];
         };
 
     /**
@@ -610,7 +672,7 @@
      */
     Cart.ProductQuantity = function (amount, dimX, dimY, dimZ) {
         // Integers only!
-        this.amount   = amount;
+        this[' amount'] = amount;
 
         // Also don't use float-values with dimensions, change the unit for the dimensions instead.
         // The price of the product relates to the standard value of the dimension unit;
@@ -620,14 +682,14 @@
         // - Or the product is a sponge :) that will be individually cut for the customer in a cubic
         //   shape. The dimension unit is defined to cm - then the standard value is cubic
         //   centimeters and the price has to be defined in relation to cubic centimeters!
-        this.dimensionX = dimX || 1;
-        this.dimensionY = dimY || 1;
-        this.dimensionZ = dimZ || 1;
+        this[' dimensionX'] = dimX || 1;
+        this[' dimensionY'] = dimY || 1;
+        this[' dimensionZ'] = dimZ || 1;
 
-        if (! (Util.isInt(this.amount)
-                && Util.isInt(this.dimensionX)
-                && Util.isInt(this.dimensionY)
-                && Util.isInt(this.dimensionZ))
+        if (! (Util.isInt(this[' amount'])
+                && Util.isInt(this[' dimensionX'])
+                && Util.isInt(this[' dimensionY'])
+                && Util.isInt(this[' dimensionZ']))
         ) {
             throw new TypeError([
                 'Invalid try to instanciate quantity. Not all parameters are integers! ',
@@ -637,13 +699,53 @@
     };
 
         /**
+         * @method ProductQuantity#getAmount
+         * @returns {Integer}
+         */
+        Cart.ProductQuantity.prototype.getAmount = function () {
+            return this[' amount'];
+        };
+
+        /**
+         * @method ProductQuantity#getLength
+         * @returns {Integer}
+         */
+        Cart.ProductQuantity.prototype.getLength = function () {
+            return this[' dimensionX'];
+        };
+
+        /**
+         * @method ProductQuantity#getWidth
+         * @returns {Integer}
+         */
+        Cart.ProductQuantity.prototype.getWidth = function () {
+            return this[' dimensionX'];
+        };
+
+        /**
+         * @method ProductQuantity#getHeight
+         * @returns {Integer}
+         */
+        Cart.ProductQuantity.prototype.getHeight = function () {
+            return this[' dimensionY'];
+        };
+
+        /**
+         * @method ProductQuantity#getDepth
+         * @returns {Integer}
+         */
+        Cart.ProductQuantity.prototype.getDepth = function () {
+            return this[' dimensionZ'];
+        };
+
+        /**
          * Calculates the quantity factor for the product. Overwrite this method to modify the cart
          * calculation to your needs (e. g. to convert into another scale unit).
          * @method  ProductQuantity#getPrice
          * @returns {Integer}
          */
         Cart.ProductQuantity.prototype.getFactor = function () {
-            return this.amount * this.dimensionX * this.dimensionY * this.dimensionZ;
+            return this.getAmount() * this.getWidth() * this.getHeight() * this.getDepth();
         };
 
     /**
@@ -656,6 +758,7 @@
      * @param   {String} label
      * @param   {Integer=} price
      * @borrows module:Cestino~Cart.ProductFeature#getPrice as getPrice
+     * @borrows module:Cestino~Cart.ProductFeature#getLabel as getLabel
      */
     Cart.ProductFeature = function (id, label, price) {
         price = price || 0;
@@ -670,11 +773,19 @@
             throw new TypeError('The price has to be an positive integer!');
         }
 
-        this.id    = id;
+        this[' id']    = id;
         // Integers only (cents)!
-        this.price = price;
-        this.label = label;
+        this[' price'] = price;
+        this[' label'] = label;
     };
+
+        /**
+         * @method ProductFeature#getId
+         * @returns {String}
+         */
+        Cart.ProductFeature.prototype.getId = function () {
+            return this[' id'];
+        };
 
         /**
          * Returns the price of a feature selected to a product. Overwrite this method to modify
@@ -683,7 +794,16 @@
          * @returns {Integer}
          */
         Cart.ProductFeature.prototype.getPrice = function () {
-            return this.price;
+            return this[' price'];
+        };
+
+        /**
+         * Returns the label of a feature selected to a product.
+         * @method  ProductFeature#getLabel
+         * @returns {Integer}
+         */
+        Cart.ProductFeature.prototype.getLabel = function () {
+            return this[' label'];
         };
 
     /**
@@ -810,23 +930,23 @@
          * @public
          */
         function _toJSON() {
-            var cart = {date: (new Date()).toISOString(), AutoPosId: this.positionId, pos: {}};
+            var cart = {date: (new Date()).toISOString(), AutoPosId: this[' positionId'], pos: {}};
     
             this.walk(function (oPosition, group) {
                 cart.pos[group] = cart.pos[group] || [];
                 cart.pos[group].push({
-                    id: oPosition.id,
+                    id: oPosition.getId(),
                     product: {
-                        id: oPosition.product.id
+                        id: oPosition.getProduct().getId()
                     },
                     quantity: {
-                        amount: oPosition.quantity.amount,
-                        dimX: oPosition.quantity.dimensionX,
-                        dimY: oPosition.quantity.dimensionY,
-                        dimZ: oPosition.quantity.dimensionZ
+                        amount: oPosition.getQuantity().getAmount(),
+                        dimX: oPosition.getQuantity().getWidth(),
+                        dimY: oPosition.getQuantity().getHeight(),
+                        dimZ: oPosition.getQuantity().getDepth()
                     },
-                    features: oPosition.features.map(function (oFeature) {
-                        return oFeature.id;
+                    features: oPosition.getFeatures().map(function (oFeature) {
+                        return oFeature.getId();
                     })
                 });
             });
@@ -847,11 +967,11 @@
         function _fromJSON(sJSON) {
             var that = this, oCart, oPosition, oShippingGroup, internGrpName;
     
-            if (Object.keys(this.positions).length !== 0) {
+            if (Object.keys(this[' positions']).length !== 0) {
                 throw new RangeError('Cart has to be empty when loading from a JSON!');
             }
             oCart = JSON.parse(sJSON);
-            this.positionId = oCart.AutoPosId;
+            this[' positionId'] = oCart.AutoPosId;
     
             Object.keys(oCart.pos).forEach(function (group) {
                 internGrpName = 'g'+group;
@@ -873,16 +993,16 @@
                             position.quantity.dimZ
                         )
                     );
-                    oPosition.cart = that;
-                    that.positions[internGrpName] = that.positions[internGrpName] || [];
-                    that.positions[internGrpName].push(oPosition);
+                    oPosition[' cart'] = that;
+                    that[' positions'][internGrpName] = that[' positions'][internGrpName] || [];
+                    that[' positions'][internGrpName].push(oPosition);
                 });
             });
     
             // notify load-listeners on promise resolve
-            this.oCartService.setProductDataToCart(this)
+            this[' oCartService'].setProductDataToCart(this)
                 .then(function() {
-                    that.listener.load.forEach(function (fnListener) {
+                    that[' listener'].load.forEach(function (fnListener) {
                         fnListener(that);
                     });
                 });
@@ -897,7 +1017,7 @@
          * @private
          */
         function _notifyListeners(sKind, oPosition) {
-            this.listener[sKind].forEach(function (fnListener) {
+            this[' listener'][sKind].forEach(function (fnListener) {
                 fnListener(oPosition);
             });
         }
@@ -943,14 +1063,14 @@
             oShippingGroup[' cart'] = this;
             this[' shippingGroups'][internGrpName] = oShippingGroup;
 
-            this.positions[internGrpName] = this.positions[internGrpName] || [];
+            this[' positions'][internGrpName] = this[' positions'][internGrpName] || [];
 
-            posId = 'p'+(this.positionId++);
+            posId = 'p'+(this[' positionId']++);
             oPosition = new CartPosition(
                 posId, oProduct, aProductFeatures, oQuantity
             );
-            oPosition.cart = this;
-            this.positions[internGrpName].push(oPosition);
+            oPosition[' cart'] = this;
+            this[' positions'][internGrpName].push(oPosition);
             _notifyListeners.call(this, 'add', oPosition);
 
             return posId;
@@ -973,7 +1093,7 @@
                 if (availableEvents.indexOf(kind) === -1) {
                     throw new TypeError(kind+' is an unknown event! Try one of these: '+availableEvents.join(', ')+'.');
                 }
-                this.listener[kind].push(fnListener);
+                this[' listener'][kind].push(fnListener);
                 return this;
             }
 
@@ -993,9 +1113,9 @@
                 if (availableEvents.indexOf(kind) === -1) {
                     throw new TypeError(kind+' is an unknown event! Try one of these: '+availableEvents.join(', ')+'.');
                 }
-                this.listener[kind].some(function (eListener, idx) {
+                this[' listener'][kind].some(function (eListener, idx) {
                     if (fnListener === eListener) {
-                        that.listener[kind].splice(idx, 1);
+                        that[' listener'][kind].splice(idx, 1);
                         return true;
                     }
                 });
@@ -1012,7 +1132,7 @@
          * @public
          */
         function _getGroups() {
-            return Object.keys(this.positions).map(function (val) {
+            return Object.keys(this[' positions']).map(function (val) {
                 return val.substr(1);
             });
         }
@@ -1058,13 +1178,13 @@
         function _getPositionsOfGroup(sShippingGroup) {
             var internGrpName = _getInternGroupName.call(this, sShippingGroup);
 
-            if (! (internGrpName in this.positions)) {
+            if (! (internGrpName in this[' positions'])) {
                 throw new ReferenceError(
-                    ["No shipping-group with name '",sShippingGroup,"' found!"].join('')
+                    ["No shipping-group with name '", sShippingGroup, "' found!"].join('')
                 )
             }
 
-            return this.positions[internGrpName];
+            return this[' positions'][internGrpName];
         }
 
 
@@ -1129,7 +1249,7 @@
                 throw new RefereneceError(["No position with id '", sIdCartPosition, "' found!"].join(''));
             }
 
-            oPosition = this.positions[oFound.group].splice(oFound.index, 1)[0];
+            oPosition = this[' positions'][oFound.group].splice(oFound.index, 1)[0];
             _notifyListeners.call(this, 'remove', oPosition);
 
             return oPosition;
@@ -1153,7 +1273,7 @@
                 ].join(''));
             }
 
-            return this.positions[oFound.group][oFound.index];
+            return this[' positions'][oFound.group][oFound.index];
         }
 
 
@@ -1165,12 +1285,12 @@
          * @private
          */
         function _findPosition(sIdCartPosition) {
-            var positions = this.positions,
+            var positions = this[' positions'],
                 eFound = false;
 
             Object.keys(positions).some(function (group) {
                 positions[group].some(function (ePosition, idx) {
-                    if (ePosition.id === sIdCartPosition) {
+                    if (ePosition.getId() === sIdCartPosition) {
                         eFound = {"group": group, "index": idx};
                     }
                     return !!eFound;
@@ -1196,9 +1316,9 @@
                 throw new TypeError('The quantity has to be a instance of Cart.ProductQuantity!');
             }
 
-            this.quantity = oQuantity;
+            this[' quantity'] = oQuantity;
 
-            _notifyListeners.call(this.cart, 'change', this);
+            _notifyListeners.call(this[' cart'], 'change', this);
             return this;
         }
 
@@ -1217,8 +1337,8 @@
             if (! Util.isInt(amount)) {
                 throw new TypeError('Amount has to be of type integer!');
             }
-            this.quantity.amount += amount;
-            _notifyListeners.call(this.cart, 'change', this);
+            this[' quantity'][' amount'] += amount;
+            _notifyListeners.call(this[' cart'], 'change', this);
             return this;
         }
 
@@ -1237,8 +1357,8 @@
             if (! Util.isInt(amount)) {
                 throw new TypeError('Amount has to be of type integer!');
             }
-            this.quantity.amount -= amount;
-            _notifyListeners.call(this.cart, 'change', this);
+            this[' quantity'][' amount'] -= amount;
+            _notifyListeners.call(this[' cart'], 'change', this);
             return this;
         }
 
@@ -1252,11 +1372,11 @@
         function _calculateCartPosition() {
             var nFeaturePrice = 0;
 
-            this.features.forEach(function (eFeature) {
+            this[' features'].forEach(function (eFeature) {
                 nFeaturePrice += eFeature.getPrice();
             });
 
-            return (this.product.getPrice() + nFeaturePrice) * this.quantity.getFactor();
+            return (this[' product'].getPrice() + nFeaturePrice) * this[' quantity'].getFactor();
         }
 
 
@@ -1273,6 +1393,9 @@
 
         subclassConstructor.prototype = Object.create(this.prototype);
         subclassConstructor.prototype.constructor = subclassConstructor;
+        subclassConstructor.prototype.getSuperMethod = function (methodName) {
+            return this.__proto__.__proto__.bind(this);
+        };
 
         for (key in subclassProto) {
             if (Object.prototype.hasOwnProperty.call(subclassProto, key)) {
@@ -1407,44 +1530,7 @@
              * @returns {ShippingGroup}
              */
             extendWith: _extendWith.bind(Cart.ShippingGroup)
-        },
-        
-        /**
-         * @deprecated
-         * @method
-         * @static
-         */
-        createProduct: _createFactory('Product'),
-        /**
-         * @deprecated
-         * @method
-         * @static
-         */
-        createProductFeature: _createFactory('ProductFeature'),
-        /**
-         * @deprecated
-         * @method
-         * @static
-         */
-        createProductQuantity: _createFactory('ProductQuantity'),
-        /**
-         * @deprecated
-         * @method
-         * @static
-         */
-        extendProduct: _extendWith.bind(Cart.Product),
-        /**
-         * @deprecated
-         * @method
-         * @static
-         */
-        extendProductFeature: _extendWith.bind(Cart.ProductFeature),
-        /**
-         * @deprecated
-         * @method
-         * @static
-         */
-        extendProductQuantity: _extendWith.bind(Cart.ProductQuantity),
+        }
     };
 }));
 

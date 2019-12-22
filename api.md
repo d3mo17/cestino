@@ -41,7 +41,7 @@
 ## Cestino/BasicCartService
 Fetch masterdata from an external resource and put it to the cart model.
 
-**Requires**: <code>module:bluebird</code>, <code>module:atomicjs</code>  
+**Requires**: <code>module:bluebird</code>, <code>module:atomic</code>  
 
 * * *
 
@@ -84,12 +84,6 @@ A basic shopping cart implementation in javascript.
             * [.create](#module_Cestino.ShippingGroup.create) ⇒ [<code>ShippingGroup</code>](#ShippingGroup)
             * [.extendWith](#module_Cestino.ShippingGroup.extendWith) ⇒ [<code>ShippingGroup</code>](#ShippingGroup)
         * [.create(oService)](#module_Cestino.create) ⇒ [<code>Cart</code>](#Cart)
-        * ~~[.createProduct()](#module_Cestino.createProduct)~~
-        * ~~[.createProductFeature()](#module_Cestino.createProductFeature)~~
-        * ~~[.createProductQuantity()](#module_Cestino.createProductQuantity)~~
-        * ~~[.extendProduct()](#module_Cestino.extendProduct)~~
-        * ~~[.extendProductFeature()](#module_Cestino.extendProductFeature)~~
-        * ~~[.extendProductQuantity()](#module_Cestino.extendProductQuantity)~~
     * _inner_
         * ["add" (position)](#module_Cestino..event_add)
         * ["remove" (position)](#module_Cestino..event_remove)
@@ -308,60 +302,6 @@ Creates an object of type Cart; The main object.
 
 * * *
 
-<a name="module_Cestino.createProduct"></a>
-
-### ~~Cestino.createProduct()~~
-***Deprecated***
-
-**Kind**: static method of [<code>Cestino</code>](#module_Cestino)  
-
-* * *
-
-<a name="module_Cestino.createProductFeature"></a>
-
-### ~~Cestino.createProductFeature()~~
-***Deprecated***
-
-**Kind**: static method of [<code>Cestino</code>](#module_Cestino)  
-
-* * *
-
-<a name="module_Cestino.createProductQuantity"></a>
-
-### ~~Cestino.createProductQuantity()~~
-***Deprecated***
-
-**Kind**: static method of [<code>Cestino</code>](#module_Cestino)  
-
-* * *
-
-<a name="module_Cestino.extendProduct"></a>
-
-### ~~Cestino.extendProduct()~~
-***Deprecated***
-
-**Kind**: static method of [<code>Cestino</code>](#module_Cestino)  
-
-* * *
-
-<a name="module_Cestino.extendProductFeature"></a>
-
-### ~~Cestino.extendProductFeature()~~
-***Deprecated***
-
-**Kind**: static method of [<code>Cestino</code>](#module_Cestino)  
-
-* * *
-
-<a name="module_Cestino.extendProductQuantity"></a>
-
-### ~~Cestino.extendProductQuantity()~~
-***Deprecated***
-
-**Kind**: static method of [<code>Cestino</code>](#module_Cestino)  
-
-* * *
-
 <a name="module_Cestino..event_add"></a>
 
 ### "add" (position)
@@ -569,7 +509,7 @@ Pad a string on left side to a certain length with another string.
 
 * [BasicCartService](#BasicCartService) ℗
     * [new BasicCartService(options)](#new_BasicCartService_new)
-    * [.options](#BasicCartService+options) : <code>Object</code>
+    * [. options](#BasicCartService+ options) : <code>Object</code>
     * [.setProductDataToCart(oCart)](#BasicCartService+setProductDataToCart) ⇒ <code>Promise</code>
 
 
@@ -588,9 +528,9 @@ Service used to fetch and put master data of products into the model.
 
 * * *
 
-<a name="BasicCartService+options"></a>
+<a name="BasicCartService+ options"></a>
 
-### basicCartService.options : <code>Object</code>
+### basicCartService. options : <code>Object</code>
 **Kind**: instance property of [<code>BasicCartService</code>](#BasicCartService)  
 
 * * *
@@ -618,11 +558,11 @@ Updates the cart with actual valid information about products.
 
 * [Cart](#Cart) ℗
     * [new Cart(oService)](#new_Cart_new)
-    * [.positionId](#Cart+positionId) : <code>Integer</code>
-    * [.oCartService](#Cart+oCartService) : <code>Object</code>
-    * [.positions](#Cart+positions) : [<code>Array.&lt;CartPosition&gt;</code>](#CartPosition)
+    * [. positionId](#Cart+ positionId) : <code>Integer</code>
+    * [. oCartService](#Cart+ oCartService) : <code>Object</code>
+    * [. positions](#Cart+ positions) : [<code>Array.&lt;CartPosition&gt;</code>](#CartPosition)
     * [. shippingGroups](#Cart+ shippingGroups) : <code>Object</code> ℗
-    * [.listener](#Cart+listener) : <code>Object</code>
+    * [. listener](#Cart+ listener) : <code>Object</code>
     * [.walk(fnCallback)](#Cart+walk) ⇒ [<code>Cart</code>](#Cart)
     * [.toJSON()](#Cart+toJSON) ⇒ <code>String</code>
     * [.fromJSON(sJSON)](#Cart+fromJSON) ⇒ [<code>Cart</code>](#Cart)
@@ -660,23 +600,23 @@ You have to implement costs of payment on your own.
 
 * * *
 
-<a name="Cart+positionId"></a>
+<a name="Cart+ positionId"></a>
 
-### cart.positionId : <code>Integer</code>
+### cart. positionId : <code>Integer</code>
 **Kind**: instance property of [<code>Cart</code>](#Cart)  
 
 * * *
 
-<a name="Cart+oCartService"></a>
+<a name="Cart+ oCartService"></a>
 
-### cart.oCartService : <code>Object</code>
+### cart. oCartService : <code>Object</code>
 **Kind**: instance property of [<code>Cart</code>](#Cart)  
 
 * * *
 
-<a name="Cart+positions"></a>
+<a name="Cart+ positions"></a>
 
-### cart.positions : [<code>Array.&lt;CartPosition&gt;</code>](#CartPosition)
+### cart. positions : [<code>Array.&lt;CartPosition&gt;</code>](#CartPosition)
 **Kind**: instance property of [<code>Cart</code>](#Cart)  
 
 * * *
@@ -689,9 +629,9 @@ You have to implement costs of payment on your own.
 
 * * *
 
-<a name="Cart+listener"></a>
+<a name="Cart+ listener"></a>
 
-### cart.listener : <code>Object</code>
+### cart. listener : <code>Object</code>
 **Kind**: instance property of [<code>Cart</code>](#Cart)  
 
 * * *
@@ -950,6 +890,15 @@ Decrementing amount of cart position.
 **Kind**: global class  
 **Access**: private  
 
+* [CartPosition](#CartPosition) ℗
+    * [new CartPosition(sId, oProduct, aFeatures, oQuantity)](#new_CartPosition_new)
+    * [.getId()](#CartPosition+getId) ⇒ <code>String</code>
+    * [.getProduct()](#CartPosition+getProduct) ⇒ [<code>Product</code>](#Product)
+    * [.getFeatures()](#CartPosition+getFeatures) ⇒ [<code>Array.&lt;ProductFeature&gt;</code>](#ProductFeature)
+    * [.getQuantity()](#CartPosition+getQuantity) ⇒ [<code>ProductQuantity</code>](#ProductQuantity)
+    * [.getCart()](#CartPosition+getCart) ⇒ [<code>Cart</code>](#Cart)
+
+
 * * *
 
 <a name="new_CartPosition_new"></a>
@@ -968,6 +917,41 @@ The cart reference will be injected on instancing separately.
 
 * * *
 
+<a name="CartPosition+getId"></a>
+
+### cartPosition.getId() ⇒ <code>String</code>
+**Kind**: instance method of [<code>CartPosition</code>](#CartPosition)  
+
+* * *
+
+<a name="CartPosition+getProduct"></a>
+
+### cartPosition.getProduct() ⇒ [<code>Product</code>](#Product)
+**Kind**: instance method of [<code>CartPosition</code>](#CartPosition)  
+
+* * *
+
+<a name="CartPosition+getFeatures"></a>
+
+### cartPosition.getFeatures() ⇒ [<code>Array.&lt;ProductFeature&gt;</code>](#ProductFeature)
+**Kind**: instance method of [<code>CartPosition</code>](#CartPosition)  
+
+* * *
+
+<a name="CartPosition+getQuantity"></a>
+
+### cartPosition.getQuantity() ⇒ [<code>ProductQuantity</code>](#ProductQuantity)
+**Kind**: instance method of [<code>CartPosition</code>](#CartPosition)  
+
+* * *
+
+<a name="CartPosition+getCart"></a>
+
+### cartPosition.getCart() ⇒ [<code>Cart</code>](#Cart)
+**Kind**: instance method of [<code>CartPosition</code>](#CartPosition)  
+
+* * *
+
 <a name="Product"></a>
 
 ## Product ℗
@@ -976,6 +960,8 @@ The cart reference will be injected on instancing separately.
 
 * [Product](#Product) ℗
     * [new Cart.Product(id, title, price)](#new_Product_new)
+    * [.getId()](#Product+getId) ⇒ <code>String</code>
+    * [.getTitle()](#Product+getTitle) ⇒ <code>String</code>
     * [.getPrice()](#Product+getPrice) ⇒ <code>Integer</code>
 
 
@@ -993,6 +979,22 @@ Class to describe a product that was add to cart.
 | title | <code>String</code> | 
 | price | <code>Integer</code> | 
 
+
+* * *
+
+<a name="Product+getId"></a>
+
+### product.getId() ⇒ <code>String</code>
+**Kind**: instance method of [<code>Product</code>](#Product)  
+
+* * *
+
+<a name="Product+getTitle"></a>
+
+### product.getTitle() ⇒ <code>String</code>
+Returns the title of the product.
+
+**Kind**: instance method of [<code>Product</code>](#Product)  
 
 * * *
 
@@ -1014,6 +1016,11 @@ to your needs (e. g. to add tax)
 
 * [ProductQuantity](#ProductQuantity) ℗
     * [new Cart.ProductQuantity(amount, [dimX], [dimY], [dimZ])](#new_ProductQuantity_new)
+    * [.getAmount()](#ProductQuantity+getAmount) ⇒ <code>Integer</code>
+    * [.getLength()](#ProductQuantity+getLength) ⇒ <code>Integer</code>
+    * [.getWidth()](#ProductQuantity+getWidth) ⇒ <code>Integer</code>
+    * [.getHeight()](#ProductQuantity+getHeight) ⇒ <code>Integer</code>
+    * [.getDepth()](#ProductQuantity+getDepth) ⇒ <code>Integer</code>
     * [.getPrice()](#ProductQuantity+getPrice) ⇒ <code>Integer</code>
 
 
@@ -1036,6 +1043,41 @@ will be checked, you have to implement it by yourself!
 
 * * *
 
+<a name="ProductQuantity+getAmount"></a>
+
+### productQuantity.getAmount() ⇒ <code>Integer</code>
+**Kind**: instance method of [<code>ProductQuantity</code>](#ProductQuantity)  
+
+* * *
+
+<a name="ProductQuantity+getLength"></a>
+
+### productQuantity.getLength() ⇒ <code>Integer</code>
+**Kind**: instance method of [<code>ProductQuantity</code>](#ProductQuantity)  
+
+* * *
+
+<a name="ProductQuantity+getWidth"></a>
+
+### productQuantity.getWidth() ⇒ <code>Integer</code>
+**Kind**: instance method of [<code>ProductQuantity</code>](#ProductQuantity)  
+
+* * *
+
+<a name="ProductQuantity+getHeight"></a>
+
+### productQuantity.getHeight() ⇒ <code>Integer</code>
+**Kind**: instance method of [<code>ProductQuantity</code>](#ProductQuantity)  
+
+* * *
+
+<a name="ProductQuantity+getDepth"></a>
+
+### productQuantity.getDepth() ⇒ <code>Integer</code>
+**Kind**: instance method of [<code>ProductQuantity</code>](#ProductQuantity)  
+
+* * *
+
 <a name="ProductQuantity+getPrice"></a>
 
 ### productQuantity.getPrice() ⇒ <code>Integer</code>
@@ -1054,7 +1096,9 @@ calculation to your needs (e. g. to convert into another scale unit).
 
 * [ProductFeature](#ProductFeature) ℗
     * [new Cart.ProductFeature(id, label, [price])](#new_ProductFeature_new)
+    * [.getId()](#ProductFeature+getId) ⇒ <code>String</code>
     * [.getPrice()](#ProductFeature+getPrice) ⇒ <code>Integer</code>
+    * [.getLabel()](#ProductFeature+getLabel) ⇒ <code>Integer</code>
 
 
 * * *
@@ -1074,11 +1118,27 @@ Class to describe a selected feature of a product.
 
 * * *
 
+<a name="ProductFeature+getId"></a>
+
+### productFeature.getId() ⇒ <code>String</code>
+**Kind**: instance method of [<code>ProductFeature</code>](#ProductFeature)  
+
+* * *
+
 <a name="ProductFeature+getPrice"></a>
 
 ### productFeature.getPrice() ⇒ <code>Integer</code>
 Returns the price of a feature selected to a product. Overwrite this method to modify
 the cart calculation to your needs
+
+**Kind**: instance method of [<code>ProductFeature</code>](#ProductFeature)  
+
+* * *
+
+<a name="ProductFeature+getLabel"></a>
+
+### productFeature.getLabel() ⇒ <code>Integer</code>
+Returns the label of a feature selected to a product.
 
 **Kind**: instance method of [<code>ProductFeature</code>](#ProductFeature)  
 
@@ -1206,9 +1266,9 @@ Returns the cart this shipping group belongs to.
 * [PriceFormatter](#PriceFormatter) ℗
     * [new PriceFormatter(decimalSeperator, thousandsSeperator, decimalCount)](#new_PriceFormatter_new)
     * _instance_
-        * [.decimalCount](#PriceFormatter+decimalCount) : <code>Integer</code>
-        * [.thousandsSeperator](#PriceFormatter+thousandsSeperator) : <code>String</code>
-        * [.decimalSeperator](#PriceFormatter+decimalSeperator) : <code>String</code>
+        * [. decimalCount](#PriceFormatter+ decimalCount) : <code>Integer</code>
+        * [. thousandsSeperator](#PriceFormatter+ thousandsSeperator) : <code>String</code>
+        * [. decimalSeperator](#PriceFormatter+ decimalSeperator) : <code>String</code>
     * _static_
         * [.format(int)](#PriceFormatter.format) ⇒ <code>String</code> ℗
 
@@ -1230,23 +1290,23 @@ Creates an object to convert integer price to decimal price (e. g. cents to doll
 
 * * *
 
-<a name="PriceFormatter+decimalCount"></a>
+<a name="PriceFormatter+ decimalCount"></a>
 
-### priceFormatter.decimalCount : <code>Integer</code>
+### priceFormatter. decimalCount : <code>Integer</code>
 **Kind**: instance property of [<code>PriceFormatter</code>](#PriceFormatter)  
 
 * * *
 
-<a name="PriceFormatter+thousandsSeperator"></a>
+<a name="PriceFormatter+ thousandsSeperator"></a>
 
-### priceFormatter.thousandsSeperator : <code>String</code>
+### priceFormatter. thousandsSeperator : <code>String</code>
 **Kind**: instance property of [<code>PriceFormatter</code>](#PriceFormatter)  
 
 * * *
 
-<a name="PriceFormatter+decimalSeperator"></a>
+<a name="PriceFormatter+ decimalSeperator"></a>
 
-### priceFormatter.decimalSeperator : <code>String</code>
+### priceFormatter. decimalSeperator : <code>String</code>
 **Kind**: instance property of [<code>PriceFormatter</code>](#PriceFormatter)  
 
 * * *

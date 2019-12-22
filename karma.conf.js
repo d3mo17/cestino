@@ -21,7 +21,7 @@ module.exports = function(config) {
       {pattern: 'test/amd/**/*', included: false},
       {pattern: 'src/**/*.js', included: false},
       {pattern: 'dist/**/*.js', included: false},
-      {pattern: 'node_modules/atomicjs/dist/*.js', included: false},
+      {pattern: 'node_modules/atomic/dist/*.js', included: false},
       {pattern: 'node_modules/bluebird/js/browser/*.js', included: false}
     ],
 
@@ -62,7 +62,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['jsdom', 'PhantomJS'],
+    browsers: ['jsdom', 'ChromeHeadless'],
 
 
     // Continuous Integration mode

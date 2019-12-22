@@ -9,11 +9,11 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         define(
-            ['bluebird/js/browser/bluebird.min', 'atomicjs/dist/atomic.min'],
+            ['bluebird/js/browser/bluebird.min', 'atomic/dist/atomic.min'],
             factory
         );
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(require('bluebird'), require('atomicjs'));
+        module.exports = factory(require('bluebird'), require('atomic'));
     } else {
         root.Cestino = root.Cestino || {};
         root.Cestino.BasicCartService = factory(root.Promise, root.atomic);
@@ -26,12 +26,16 @@
         url: ''
     };
 
+    if (typeof window !== 'undefined') {
+        window.Promise = window.Promise || Promise;
+    }
+
     /**
      * Fetch masterdata from an external resource and put it to the cart model.
      * 
      * @module   Cestino/BasicCartService
      * @requires bluebird
-     * @requires atomicjs
+     * @requires atomic
      */
 
 
@@ -58,9 +62,9 @@
         // clone defaults ... (Does only work with plain objects, don't use it e. g. to clone
         // Date-object values)
         /** @member {Object} */
-        this.options = JSON.parse(JSON.stringify(defaults));
+        this[' options'] = JSON.parse(JSON.stringify(defaults));
         for (attr in options) {
-            this.options[attr] = options[attr];
+            this[' options'][attr] = options[attr];
         }
     }
 
@@ -76,28 +80,28 @@
             oCart.walk(function (oPosition) {
                 var product, deletedFeatures = [], del;
 
-                if (! (oPosition.product.id in data)) {
-                    oCart.deletePosition(oPosition.id);
+                if (! (oPosition.getProduct().getId() in data)) {
+                    oCart.deletePosition(oPosition.getId());
                     return;
                 }
 
-                product = data[oPosition.product.id];
+                product = data[oPosition.getProduct().getId()];
 
-                oPosition.product.title = product.title;
-                oPosition.product.price = product.price;
-                oPosition.features.forEach(function (oFeature, idx) {
-                    if (! (oFeature.id in product.features)) {
+                oPosition.getProduct()[' title'] = product.title;
+                oPosition.getProduct()[' price'] = product.price;
+                oPosition.getFeatures().forEach(function (oFeature, idx) {
+                    if (! (oFeature.getId() in product.features)) {
                         deletedFeatures.push(idx);
                         return; // continue
                     }
 
-                    oFeature.label = product.features[oFeature.id].label;
-                    oFeature.price = product.features[oFeature.id].price;
+                    oFeature[' label'] = product.features[oFeature.getId()].label;
+                    oFeature[' price'] = product.features[oFeature.getId()].price;
                 });
 
                 del = deletedFeatures.pop();
                 while (del) {
-                    oPosition.features.splice(del, 1)[0];
+                    oPosition[' features'].splice(del, 1)[0];
                     del = deletedFeatures.pop();
                 }
             });
@@ -115,17 +119,17 @@
             var that = this, data = {};
 
             oCart.walk(function (oPosition) {
-                data[oPosition.product.id] = oPosition.features.map(function (oFeature) {
-                    return oFeature.id;
+                data[oPosition.getProduct().getId()] = oPosition.getFeatures().map(function (oFeature) {
+                    return oFeature.getId();
                 });
             });
 
             return new Promise(function (resolve, reject) {
-                Atomic.ajax({url: that.options.url, type: 'POST', data: data})
-                    .error(reject)
-                    .success(function(response) {
-                        _mergeDataInCart.call(that, response, oCart);
-                        resolve(response);
+                Atomic(that[' options'].url, {method: 'POST', data: data})
+                    .catch(reject)
+                    .then(function(response) {
+                        _mergeDataInCart.call(that, response.data, oCart);
+                        resolve(response.data);
                     });
             });
         }

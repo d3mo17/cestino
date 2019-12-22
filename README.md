@@ -7,6 +7,7 @@ A basic shopping cart implementation in javascript.
 * Flexible service to put master data of products into the cart model
 * Positions can be grouped (e. g. by delivery time)
 * All price calculations make use of integer values instead of floats
+* Event-driven to keep track of changes made to the cart
 * Possibility to manage quantity and/or dimensions with the positions of products
 * Formatting of integer-prices / Integer to custom-format
 * Optional to put additional features (with prices) for products in cart-positions
@@ -171,8 +172,9 @@ Example:
     }
     ProductQuantityInInch.prototype.getFactor = function () {
         // calculate inch price instead of centimeter price
-        return this.amount * Math.round(
-            this.dimensionX * this.dimensionY * this.dimensionZ * Math.pow(2.54, 3),
+        return this.getAmount() * Math.round(
+            this.getWidth() * this.getHeight() * this.getDepth()
+            * Math.pow(2.54, 3),
             10
         );
     }
@@ -185,7 +187,10 @@ Example:
         this.tax = tax;
     }
     ProductWithTax.prototype.getPrice = function () {
-        return Math.round(this.price * this.tax.getFactor(), 10);
+        return Math.round(
+            this.getSuperMethod('getPrice')() * this.tax.getFactor(),
+            10
+        );
     };
     TaxProduct = Cestino.Product.extendWith(ProductWithTax);
     
@@ -215,7 +220,7 @@ Example:
 If you want to distribute your changes in the 'dist'-directory, you can use gulp:
 
 ```shell
-    $ gulp distribute
+    $ npm run build
 ```
 
 ### Testing
