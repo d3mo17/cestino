@@ -8,8 +8,7 @@ rjs.optimize({
     baseUrl: 'src',
     paths: {
       'cestino': '.',
-      'bluebird/js/browser/bluebird.min': 'empty:',
-      'atomic/dist/atomic.min': 'empty:'
+      'atomicjs/dist/atomic.min': 'empty:'
     },
     include: [
       'cestino/BasicCartService',

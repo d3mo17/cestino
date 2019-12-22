@@ -17,8 +17,7 @@ module.exports = function(config) {
     files: [
       {pattern: 'test/*Share.js'},
       {pattern: 'test/**/*.json', included: false},
-      {pattern: 'node_modules/atomic/dist/atomic.min.js'},
-      {pattern: 'node_modules/bluebird/js/browser/bluebird.min.js'},
+      {pattern: 'node_modules/atomicjs/dist/atomic.min.js'},
       {pattern: 'dist/**/*.min.js'},
       {pattern: 'test/global/**/*Spec.js'}
     ],

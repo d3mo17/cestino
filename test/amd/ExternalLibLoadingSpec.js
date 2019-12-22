@@ -1,6 +1,6 @@
 define(
-    ['bluebird/js/browser/bluebird.core.min', 'atomic/dist/atomic.min'],
-    function (Promise, Atomic) {
+    ['atomicjs/dist/atomic.min'],
+    function (Atomic) {
         describe('Test whether', function () {
             it('lib atomic can be load and used', function (done) {
                 Atomic('base/test/CartData.json')
@@ -20,14 +20,6 @@ define(
                         });
                         done();
                     });
-            });
-            it('lib bluebird can be load and used', function (done) {
-                var p = new Promise(function (resolve, reject) {
-                    resolve();
-                });
-                p.then(function () {
-                    done();
-                });
             });
         });
     });

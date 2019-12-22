@@ -9,26 +9,22 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         define(
-            'cestino/BasicCartService',['bluebird/js/browser/bluebird.min', 'atomic/dist/atomic.min'],
+            'cestino/BasicCartService',['atomicjs/dist/atomic.min'],
             factory
         );
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(require('bluebird'), require('atomic'));
+        module.exports = factory(require('atomicjs'));
     } else {
         root.Cestino = root.Cestino || {};
-        root.Cestino.BasicCartService = factory(root.Promise, root.atomic);
+        root.Cestino.BasicCartService = factory(root.atomic);
     }
-}(this, function (Promise, Atomic) {
+}(this, function (Atomic) {
     "use strict";
 
     /** @default */
     var defaults = {
         url: ''
     };
-
-    if (typeof window !== 'undefined') {
-        window.Promise = window.Promise || Promise;
-    }
 
     /**
      * Fetch masterdata from an external resource and put it to the cart model.
@@ -124,13 +120,12 @@
                 });
             });
 
-            return new Promise(function (resolve, reject) {
-                Atomic(that[' options'].url, {method: 'POST', data: data})
-                    .catch(reject)
-                    .then(function(response) {
-                        _mergeDataInCart.call(that, response.data, oCart);
-                        resolve(response.data);
-                    });
+            return Atomic(
+                this[' options'].url,
+                { method: 'POST', data: data }
+            ).then(function (response) {
+                _mergeDataInCart.call(that, response.data, oCart);
+                return response.data;
             });
         }
 
