@@ -15,27 +15,26 @@
     "test": "test"
   },
   "main": "./src/Cart.js",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "dependencies": {
     "atomic": "github:cferdinandi/atomic#v4.2.1",
-    "bluebird": "^3.3.4"
+    "bluebird": "^3.7.2"
   },
   "devDependencies": {
     "browserify": "^14.5.0",
     "jasmine": "^2.99.0",
     "jasmine-core": "^2.99.1",
-    "jsdoc-to-markdown": "^3.0.4",
+    "jsdoc-to-markdown": "^5.0.3",
     "jsdom": "^9.9.1",
-    "karma": "^1.4.0",
+    "karma": "^4.4.1",
     "karma-browserify": "^5.3.0",
-    "karma-jasmine": "^1.1.0",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-jasmine": "^1.1.2",
     "karma-jsdom-launcher": "^5.0.0",
-    "karma-phantomjs-launcher": "^1.0.2",
     "karma-requirejs": "^1.1.0",
-    "phantomjs": "^2.1.7",
-    "requirejs": "^2.2.0",
-    "uglify-js": "^3.4.9",
-    "watchify": "^3.11.0"
+    "requirejs": "^2.3.6",
+    "uglify-js": "^3.7.2",
+    "watchify": "^3.11.1"
   },
   "keywords": [
     "shopping",
