@@ -15,7 +15,7 @@
     "test": "test"
   },
   "main": "./src/Cart.js",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "dependencies": {
     "atomicjs": "^4.4.0"
   },
