@@ -1,1 +1,0 @@
-cartTest(Cestino, Cestino.BasicCartService);
