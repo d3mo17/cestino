@@ -1,11 +1,11 @@
 {
   "name": "cestino",
   "title": "cestino",
-  "version": "2.1.6",
+  "version": "2.1.7",
   "description": "A basic shopping cart implementation in javascript.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rekrut/cestino.git"
+    "url": "git+https://github.com/d3mo17/cestino.git"
   },
   "scripts": {
     "test": "node_modules/jest/bin/jest.js",
@@ -32,7 +32,7 @@
   "author": "Daniel Moritz",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rekrut/cestino/issues"
+    "url": "https://github.com/d3mo17/cestino/issues"
   },
-  "homepage": "https://github.com/rekrut/cestino#readme"
+  "homepage": "https://github.com/d3mo17/cestino#readme"
 }
