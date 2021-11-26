@@ -576,9 +576,6 @@ Updates the cart with actual valid information about products.
     * [.calculate(includeShippingGroupCost)](#Cart+calculate) ⇒ <code>Integer</code>
     * [.deletePosition(sIdCartPosition)](#Cart+deletePosition) ⇒ [<code>CartPosition</code>](#CartPosition)
     * [.getPositionById(sIdCartPosition)](#Cart+getPositionById) ⇒ [<code>CartPosition</code>](#CartPosition)
-    * [.replaceQuantity(oQuantity)](#Cart+replaceQuantity) ⇒ [<code>CartPosition</code>](#CartPosition)
-    * [.incrementAmount(amount)](#Cart+incrementAmount) ⇒ [<code>CartPosition</code>](#CartPosition)
-    * [.decrementAmount(amount)](#Cart+decrementAmount) ⇒ [<code>CartPosition</code>](#CartPosition)
 
 
 * * *
@@ -835,55 +832,6 @@ Tries to get a position from given id.
 
 * * *
 
-<a name="Cart+replaceQuantity"></a>
-
-### cart.replaceQuantity(oQuantity) ⇒ [<code>CartPosition</code>](#CartPosition)
-Replacing the product quantity in cart position.
-
-**Kind**: instance method of [<code>Cart</code>](#Cart)  
-**Returns**: [<code>CartPosition</code>](#CartPosition) - this-reference for method chaining ...  
-**Emits**: [<code>change</code>](#module_Cestino..event_change)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| oQuantity | [<code>ProductQuantity</code>](#ProductQuantity) | 
-
-
-* * *
-
-<a name="Cart+incrementAmount"></a>
-
-### cart.incrementAmount(amount) ⇒ [<code>CartPosition</code>](#CartPosition)
-Incrementing amount of cart position.
-
-**Kind**: instance method of [<code>Cart</code>](#Cart)  
-**Emits**: [<code>change</code>](#module_Cestino..event_change)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| amount | <code>Integer</code> | 
-
-
-* * *
-
-<a name="Cart+decrementAmount"></a>
-
-### cart.decrementAmount(amount) ⇒ [<code>CartPosition</code>](#CartPosition)
-Decrementing amount of cart position.
-
-**Kind**: instance method of [<code>Cart</code>](#Cart)  
-**Emits**: [<code>change</code>](#module_Cestino..event_change)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| amount | <code>Integer</code> | 
-
-
-* * *
-
 <a name="CartPosition"></a>
 
 ## CartPosition ℗
@@ -897,6 +845,10 @@ Decrementing amount of cart position.
     * [.getFeatures()](#CartPosition+getFeatures) ⇒ [<code>Array.&lt;ProductFeature&gt;</code>](#ProductFeature)
     * [.getQuantity()](#CartPosition+getQuantity) ⇒ [<code>ProductQuantity</code>](#ProductQuantity)
     * [.getCart()](#CartPosition+getCart) ⇒ [<code>Cart</code>](#Cart)
+    * [.replaceQuantity(oQuantity)](#CartPosition+replaceQuantity) ⇒ [<code>CartPosition</code>](#CartPosition)
+    * [.incrementAmount(amount)](#CartPosition+incrementAmount) ⇒ [<code>CartPosition</code>](#CartPosition)
+    * [.decrementAmount(amount)](#CartPosition+decrementAmount) ⇒ [<code>CartPosition</code>](#CartPosition)
+    * [.calculate()](#CartPosition+calculate) ⇒ <code>Integer</code>
 
 
 * * *
@@ -952,6 +904,65 @@ The cart reference will be injected on instancing separately.
 
 * * *
 
+<a name="CartPosition+replaceQuantity"></a>
+
+### cartPosition.replaceQuantity(oQuantity) ⇒ [<code>CartPosition</code>](#CartPosition)
+Replacing the product quantity in cart position.
+
+**Kind**: instance method of [<code>CartPosition</code>](#CartPosition)  
+**Returns**: [<code>CartPosition</code>](#CartPosition) - this-reference for method chaining ...  
+**Emits**: [<code>change</code>](#module_Cestino..event_change)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| oQuantity | [<code>ProductQuantity</code>](#ProductQuantity) | 
+
+
+* * *
+
+<a name="CartPosition+incrementAmount"></a>
+
+### cartPosition.incrementAmount(amount) ⇒ [<code>CartPosition</code>](#CartPosition)
+Incrementing amount of cart position.
+
+**Kind**: instance method of [<code>CartPosition</code>](#CartPosition)  
+**Emits**: [<code>change</code>](#module_Cestino..event_change)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| amount | <code>Integer</code> | 
+
+
+* * *
+
+<a name="CartPosition+decrementAmount"></a>
+
+### cartPosition.decrementAmount(amount) ⇒ [<code>CartPosition</code>](#CartPosition)
+Decrementing amount of cart position.
+
+**Kind**: instance method of [<code>CartPosition</code>](#CartPosition)  
+**Emits**: [<code>change</code>](#module_Cestino..event_change)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| amount | <code>Integer</code> | 
+
+
+* * *
+
+<a name="CartPosition+calculate"></a>
+
+### cartPosition.calculate() ⇒ <code>Integer</code>
+Returns calculated price in cents.
+
+**Kind**: instance method of [<code>CartPosition</code>](#CartPosition)  
+**Access**: public  
+
+* * *
+
 <a name="Product"></a>
 
 ## Product ℗
@@ -962,7 +973,7 @@ The cart reference will be injected on instancing separately.
     * [new Cart.Product(id, title, price)](#new_Product_new)
     * [.getId()](#Product+getId) ⇒ <code>String</code>
     * [.getTitle()](#Product+getTitle) ⇒ <code>String</code>
-    * [.getPrice()](#Product+getPrice) ⇒ <code>Integer</code>
+    * [.getPrice([oCartPosition])](#Product+getPrice) ⇒ <code>Integer</code>
 
 
 * * *
@@ -1000,11 +1011,16 @@ Returns the title of the product.
 
 <a name="Product+getPrice"></a>
 
-### product.getPrice() ⇒ <code>Integer</code>
+### product.getPrice([oCartPosition]) ⇒ <code>Integer</code>
 Returns the price of the product. Overwrite this method to modify the cart calculation
 to your needs (e. g. to add tax)
 
 **Kind**: instance method of [<code>Product</code>](#Product)  
+
+| Param | Type |
+| --- | --- |
+| [oCartPosition] | [<code>CartPosition</code>](#CartPosition) | 
+
 
 * * *
 
@@ -1021,7 +1037,7 @@ to your needs (e. g. to add tax)
     * [.getWidth()](#ProductQuantity+getWidth) ⇒ <code>Integer</code>
     * [.getHeight()](#ProductQuantity+getHeight) ⇒ <code>Integer</code>
     * [.getDepth()](#ProductQuantity+getDepth) ⇒ <code>Integer</code>
-    * [.getPrice()](#ProductQuantity+getPrice) ⇒ <code>Integer</code>
+    * [.getFactor([oCartPosition])](#ProductQuantity+getFactor) ⇒ <code>Integer</code>
 
 
 * * *
@@ -1078,13 +1094,18 @@ will be checked, you have to implement it by yourself!
 
 * * *
 
-<a name="ProductQuantity+getPrice"></a>
+<a name="ProductQuantity+getFactor"></a>
 
-### productQuantity.getPrice() ⇒ <code>Integer</code>
+### productQuantity.getFactor([oCartPosition]) ⇒ <code>Integer</code>
 Calculates the quantity factor for the product. Overwrite this method to modify the cart
 calculation to your needs (e. g. to convert into another scale unit).
 
 **Kind**: instance method of [<code>ProductQuantity</code>](#ProductQuantity)  
+
+| Param | Type |
+| --- | --- |
+| [oCartPosition] | [<code>CartPosition</code>](#CartPosition) | 
+
 
 * * *
 
@@ -1097,7 +1118,7 @@ calculation to your needs (e. g. to convert into another scale unit).
 * [ProductFeature](#ProductFeature) ℗
     * [new Cart.ProductFeature(id, label, [price])](#new_ProductFeature_new)
     * [.getId()](#ProductFeature+getId) ⇒ <code>String</code>
-    * [.getPrice()](#ProductFeature+getPrice) ⇒ <code>Integer</code>
+    * [.getPrice([oCartPosition])](#ProductFeature+getPrice) ⇒ <code>Integer</code>
     * [.getLabel()](#ProductFeature+getLabel) ⇒ <code>Integer</code>
 
 
@@ -1127,11 +1148,16 @@ Class to describe a selected feature of a product.
 
 <a name="ProductFeature+getPrice"></a>
 
-### productFeature.getPrice() ⇒ <code>Integer</code>
+### productFeature.getPrice([oCartPosition]) ⇒ <code>Integer</code>
 Returns the price of a feature selected to a product. Overwrite this method to modify
 the cart calculation to your needs
 
 **Kind**: instance method of [<code>ProductFeature</code>](#ProductFeature)  
+
+| Param | Type |
+| --- | --- |
+| [oCartPosition] | [<code>CartPosition</code>](#CartPosition) | 
+
 
 * * *
 

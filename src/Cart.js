@@ -7,8 +7,6 @@
  * @returns {Object}
  */
 (function (root, factory) {
-    var i, helperRef;
-
     if (typeof define === 'function' && define.amd) {
         define(
             ['cestino/Util', 'cestino/BasicCartService', 'cestino/PriceFormatter'],
@@ -87,7 +85,7 @@
             calculate: _calculateCartPosition,
             incrementAmount: _incrementAmount, /* Params: amount */
             decrementAmount: _decrementAmount, /* Params: amount */
-            replaceQuantity: _replaceQuantity /* Params: amount */
+            replaceQuantity: _replaceQuantity /* Params: quantity-object */
         };
 
 
@@ -283,9 +281,10 @@
          * Returns the price of the product. Overwrite this method to modify the cart calculation
          * to your needs (e. g. to add tax)
          * @method  Product#getPrice
+         * @param   {CartPosition=} oCartPosition
          * @returns {Integer}
          */
-        Cart.Product.prototype.getPrice = function () {
+        Cart.Product.prototype.getPrice = function (oCartPosition) {
             return this[' price'];
         };
 
@@ -373,10 +372,11 @@
         /**
          * Calculates the quantity factor for the product. Overwrite this method to modify the cart
          * calculation to your needs (e. g. to convert into another scale unit).
-         * @method  ProductQuantity#getPrice
+         * @method  ProductQuantity#getFactor
+         * @param   {CartPosition=} oCartPosition
          * @returns {Integer}
          */
-        Cart.ProductQuantity.prototype.getFactor = function () {
+        Cart.ProductQuantity.prototype.getFactor = function (oCartPosition) {
             return this.getAmount() * this.getWidth() * this.getHeight() * this.getDepth();
         };
 
@@ -423,9 +423,10 @@
          * Returns the price of a feature selected to a product. Overwrite this method to modify
          * the cart calculation to your needs
          * @method  ProductFeature#getPrice
+         * @param   {CartPosition=} oCartPosition
          * @returns {Integer}
          */
-        Cart.ProductFeature.prototype.getPrice = function () {
+        Cart.ProductFeature.prototype.getPrice = function (oCartPosition) {
             return this[' price'];
         };
 
@@ -937,7 +938,7 @@
         /**
          * Replacing the product quantity in cart position.
          *
-         * @method  Cart#replaceQuantity
+         * @method  CartPosition#replaceQuantity
          * @param   {ProductQuantity} oQuantity
          * @returns {CartPosition} this-reference for method chaining ...
          * @public
@@ -958,7 +959,7 @@
         /**
          * Incrementing amount of cart position.
          *
-         * @method  Cart#incrementAmount
+         * @method  CartPosition#incrementAmount
          * @param   {Integer} amount
          * @returns {CartPosition}
          * @public
@@ -978,7 +979,7 @@
         /**
          * Decrementing amount of cart position.
          *
-         * @method  Cart#decrementAmount
+         * @method  CartPosition#decrementAmount
          * @param   {Integer} amount
          * @returns {CartPosition}
          * @public
@@ -998,17 +999,20 @@
         /**
          * Returns calculated price in cents.
          *
+         * @method  CartPosition#calculate
          * @returns {Integer}
          * @public
          */
         function _calculateCartPosition() {
-            var nFeaturePrice = 0;
+            var that = this,
+                nFeaturePrice = 0;
 
             this[' features'].forEach(function (eFeature) {
-                nFeaturePrice += eFeature.getPrice();
+                nFeaturePrice += eFeature.getPrice(that);
             });
 
-            return (this[' product'].getPrice() + nFeaturePrice) * this[' quantity'].getFactor();
+            return (this[' product'].getPrice(this) + nFeaturePrice) *
+                    this[' quantity'].getFactor(this);
         }
 
 
