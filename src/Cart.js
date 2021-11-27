@@ -1030,7 +1030,7 @@
         subclassConstructor.prototype = Object.create(this.prototype);
         subclassConstructor.prototype.constructor = subclassConstructor;
         subclassConstructor.prototype.getSuperMethod = function (methodName) {
-            return this.__proto__.__proto__.bind(this);
+            return this.__proto__.__proto__[methodName].bind(this);
         };
 
         for (key in subclassProto) {
@@ -1041,10 +1041,20 @@
 
         return {
             create: function () {
-                var subclassObject = Object.create(subclassConstructor.prototype);
-                parentConstructor.apply(subclassObject, arguments);
-                subclassConstructor.apply(subclassObject, arguments);
+                var subclassObject = Object.create(subclassConstructor.prototype),
+                    constructorArguments = arguments;
+
+                (function constructWalk (objToWalk) {
+                    if (!!objToWalk.__proto__.__proto__) {
+                        constructWalk(objToWalk.__proto__);
+                    }
+                    objToWalk.__proto__.constructor.apply(subclassObject, constructorArguments);
+                })(subclassObject);
+
                 return subclassObject;
+            },
+            extendWith: function (subsubclassConstructor) {
+                return _extendWith.bind(subclassConstructor)(subsubclassConstructor);
             }
         };
     }
