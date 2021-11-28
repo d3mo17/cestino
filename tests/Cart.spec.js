@@ -246,6 +246,25 @@ function cartTest (Cart, Repo) {
             expect(q.getFactor()).toBe(5*60*125*241)
 
             cart.add(p, q)
-        })
+        });
+
+        it('override method to calculate cart', function () {
+            var cart = Cart.create();
+            Cart.overridePositionCalculation(function () {
+                var that = this,
+                    nFeaturePrice = 0;
+
+                this[' features'].forEach(function (eFeature) {
+                    nFeaturePrice += eFeature.getPrice(that);
+                });
+
+                return (this[' product'].getPrice(this) + nFeaturePrice) *
+                        this[' quantity'].getFactor(this) + 4;
+            });
+
+            cart.add(genProducts[1], 2);
+            cart.add(genProducts[2]);
+            expect(cart.calculate()).toBe(2*599+4+60+4);
+        });
     })
 }

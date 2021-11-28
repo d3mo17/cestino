@@ -84,6 +84,7 @@ A basic shopping cart implementation in javascript.
             * [.create](#module_Cestino.ShippingGroup.create) ⇒ [<code>ShippingGroup</code>](#ShippingGroup)
             * [.extendWith](#module_Cestino.ShippingGroup.extendWith) ⇒ [<code>ShippingGroup</code>](#ShippingGroup)
         * [.create(oService)](#module_Cestino.create) ⇒ [<code>Cart</code>](#Cart)
+        * [.overridePositionCalculation(fn)](#module_Cestino.overridePositionCalculation)
     * _inner_
         * ["add" (position)](#module_Cestino..event_add)
         * ["remove" (position)](#module_Cestino..event_remove)
@@ -298,6 +299,20 @@ Creates an object of type Cart; The main object.
 | Param | Type |
 | --- | --- |
 | oService | <code>Object</code> | 
+
+
+* * *
+
+<a name="module_Cestino.overridePositionCalculation"></a>
+
+### Cestino.overridePositionCalculation(fn)
+Use this to override the method for calculating a cart-position
+
+**Kind**: static method of [<code>Cestino</code>](#module_Cestino)  
+
+| Param | Type |
+| --- | --- |
+| fn | <code>function</code> | 
 
 
 * * *
@@ -563,6 +578,7 @@ Updates the cart with actual valid information about products.
     * [. positions](#Cart+ positions) : [<code>Array.&lt;CartPosition&gt;</code>](#CartPosition)
     * [. shippingGroups](#Cart+ shippingGroups) : <code>Object</code> ℗
     * [. listener](#Cart+ listener) : <code>Object</code>
+    * [. familyConstructors](#Cart+ familyConstructors) : <code>Object</code>
     * [.walk(fnCallback)](#Cart+walk) ⇒ [<code>Cart</code>](#Cart)
     * [.toJSON()](#Cart+toJSON) ⇒ <code>String</code>
     * [.fromJSON(sJSON)](#Cart+fromJSON) ⇒ [<code>Cart</code>](#Cart)
@@ -629,6 +645,13 @@ You have to implement costs of payment on your own.
 <a name="Cart+ listener"></a>
 
 ### cart. listener : <code>Object</code>
+**Kind**: instance property of [<code>Cart</code>](#Cart)  
+
+* * *
+
+<a name="Cart+ familyConstructors"></a>
+
+### cart. familyConstructors : <code>Object</code>
 **Kind**: instance property of [<code>Cart</code>](#Cart)  
 
 * * *
@@ -806,7 +829,7 @@ Calculates the total of the whole shopping-cart.
 Delete a cart-position by id.
 
 **Kind**: instance method of [<code>Cart</code>](#Cart)  
-**Returns**: [<code>CartPosition</code>](#CartPosition) - sIdCartPosition The position that was removed  
+**Returns**: [<code>CartPosition</code>](#CartPosition) - The position that was removed  
 **Emits**: [<code>remove</code>](#module_Cestino..event_remove)  
 **Access**: public  
 

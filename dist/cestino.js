@@ -533,6 +533,13 @@
              */
             load: []
         };
+        /** @member {Object} */
+        this[' familyConstructors'] = {
+            Product: Cart.Product,
+            ProductQuantity: Cart.ProductQuantity,
+            ProductFeature: Cart.ProductFeature,
+            ShippingGroup: Cart.ShippingGroup
+        };
     }
 
         /**
@@ -971,18 +978,18 @@
     
             Object.keys(oCart.pos).forEach(function (group) {
                 internGrpName = 'g'+group;
-                oShippingGroup = new Cart.ShippingGroup(group);
+                oShippingGroup = new that[' familyConstructors'].ShippingGroup(group);
                 oShippingGroup[' cart'] = that;
                 that[' shippingGroups'][internGrpName] = oShippingGroup;
 
                 oCart.pos[group].forEach(function (position) {
                     oPosition = new CartPosition(
                         position.id,
-                        new Cart.Product(position.product.id, INCOMPLETE_MARKER, 987654321),
+                        new that[' familyConstructors'].Product(position.product.id, INCOMPLETE_MARKER, 987654321),
                         position.features.map(function (id) {
-                            return new Cart.ProductFeature(id, INCOMPLETE_MARKER, 987654321);
+                            return new that[' familyConstructors'].ProductFeature(id, INCOMPLETE_MARKER, 987654321);
                         }),
-                        new Cart.ProductQuantity(
+                        new that[' familyConstructors'].ProductQuantity(
                             position.quantity.amount,
                             position.quantity.dimX,
                             position.quantity.dimY,
@@ -1035,9 +1042,9 @@
             oProduct, oQuantity, oShippingGroup, aProductFeatures
         ) {
             var posId, oPosition,
-                oQuantity = oQuantity || (new Cart.ProductQuantity(1)),
+                oQuantity = oQuantity || (new this[' familyConstructors'].ProductQuantity(1)),
                 oShippingGroup = _getShippingGroupByName.call(this, oShippingGroup)
-                    || (new Cart.ShippingGroup(oShippingGroup)),
+                    || (new this[' familyConstructors'].ShippingGroup(oShippingGroup)),
                 internGrpName = 'g'+oShippingGroup.getName(),
                 aProductFeatures = aProductFeatures || [];
 
@@ -1046,7 +1053,7 @@
             }
 
             if (Util.isInt(oQuantity)) {
-                oQuantity = new Cart.ProductQuantity(oQuantity);
+                oQuantity = new this[' familyConstructors'].ProductQuantity(oQuantity);
             }
 
             if (! (oQuantity instanceof Cart.ProductQuantity)) {
@@ -1233,7 +1240,7 @@
          * 
          * @method  Cart#deletePosition
          * @param   {String} sIdCartPosition
-         * @returns {CartPosition} sIdCartPosition The position that was removed
+         * @returns {CartPosition} The position that was removed
          * @public
          * @fires   module:Cestino~remove
          */
@@ -1539,6 +1546,14 @@
              * @returns {ShippingGroup}
              */
             extendWith: _extendWith.bind(Cart.ShippingGroup)
+        },
+        /**
+         * Use this to override the method for calculating a cart-position
+         * @alias   module:Cestino.overridePositionCalculation
+         * @param   {Function} fn
+         */
+        overridePositionCalculation: function (fn) {
+            CartPosition.prototype.calculate = fn;
         }
     };
 }));
