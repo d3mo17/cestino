@@ -69,6 +69,17 @@
     }
 
     /**
+     * Other than `Math.round()`, this function rounds to nearest away from zero
+     *
+     * @public
+     * @param   {Number} number
+     * @returns {Integer}
+     */
+    function _round(number) {
+        return parseInt(number.toFixed(0), 10);
+    }
+
+    /**
      * Utilities used to check and modify basic data types.
      * 
      * @module Cestino/Util
@@ -79,7 +90,8 @@
     moduleAPI = {
         isInt: _isInt,
         isEmpty: _isEmpty,
-        lpad: _lpad
+        lpad: _lpad,
+        round: _round
     };
 
     return moduleAPI;

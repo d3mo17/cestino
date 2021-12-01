@@ -58,7 +58,8 @@
      * @abstract
      */
 
-    var INCOMPLETE_MARKER = '__INCOMPLETE__',
+    var module,
+        INCOMPLETE_MARKER = '__INCOMPLETE__',
         availableEvents = ['load', 'add', 'change', 'remove'];
 
     /**
@@ -169,13 +170,6 @@
              * @param {Cart} cart
              */
             load: []
-        };
-        /** @member {Object} */
-        this[' familyConstructors'] = {
-            Product: Cart.Product,
-            ProductQuantity: Cart.ProductQuantity,
-            ProductFeature: Cart.ProductFeature,
-            ShippingGroup: Cart.ShippingGroup
         };
     }
 
@@ -615,18 +609,18 @@
     
             Object.keys(oCart.pos).forEach(function (group) {
                 internGrpName = 'g'+group;
-                oShippingGroup = new that[' familyConstructors'].ShippingGroup(group);
+                oShippingGroup = module.ShippingGroup.create(group);
                 oShippingGroup[' cart'] = that;
                 that[' shippingGroups'][internGrpName] = oShippingGroup;
 
                 oCart.pos[group].forEach(function (position) {
                     oPosition = new CartPosition(
                         position.id,
-                        new that[' familyConstructors'].Product(position.product.id, INCOMPLETE_MARKER, 987654321),
+                        module.Product.create(position.product.id, INCOMPLETE_MARKER, 987654321),
                         position.features.map(function (id) {
-                            return new that[' familyConstructors'].ProductFeature(id, INCOMPLETE_MARKER, 987654321);
+                            return module.ProductFeature.create(id, INCOMPLETE_MARKER, 987654321);
                         }),
-                        new that[' familyConstructors'].ProductQuantity(
+                        module.ProductQuantity.create(
                             position.quantity.amount,
                             position.quantity.dimX,
                             position.quantity.dimY,
@@ -679,9 +673,9 @@
             oProduct, oQuantity, oShippingGroup, aProductFeatures
         ) {
             var posId, oPosition,
-                oQuantity = oQuantity || (new this[' familyConstructors'].ProductQuantity(1)),
+                oQuantity = oQuantity || (module.ProductQuantity.create(1)),
                 oShippingGroup = _getShippingGroupByName.call(this, oShippingGroup)
-                    || (new this[' familyConstructors'].ShippingGroup(oShippingGroup)),
+                    || (module.ShippingGroup.create(oShippingGroup)),
                 internGrpName = 'g'+oShippingGroup.getName(),
                 aProductFeatures = aProductFeatures || [];
 
@@ -690,7 +684,7 @@
             }
 
             if (Util.isInt(oQuantity)) {
-                oQuantity = new this[' familyConstructors'].ProductQuantity(oQuantity);
+                oQuantity = module.ProductQuantity.create(oQuantity);
             }
 
             if (! (oQuantity instanceof Cart.ProductQuantity)) {
@@ -1030,9 +1024,7 @@
      * @private
      */
     function _extendWith(subclassConstructor) {
-        var key,
-            parentConstructor = this,
-            subclassProto = subclassConstructor.prototype;
+        var key, subclassProto = subclassConstructor.prototype;
 
         subclassConstructor.prototype = Object.create(this.prototype);
         subclassConstructor.prototype.constructor = subclassConstructor;
@@ -1084,7 +1076,7 @@
     }
 
     // Module-API
-    return {
+    return module = {
         /**
          * Creates an object of type Cart; The main object.
          * @alias   module:Cestino.create

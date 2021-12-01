@@ -578,7 +578,6 @@ Updates the cart with actual valid information about products.
     * [. positions](#Cart+ positions) : [<code>Array.&lt;CartPosition&gt;</code>](#CartPosition)
     * [. shippingGroups](#Cart+ shippingGroups) : <code>Object</code> ℗
     * [. listener](#Cart+ listener) : <code>Object</code>
-    * [. familyConstructors](#Cart+ familyConstructors) : <code>Object</code>
     * [.walk(fnCallback)](#Cart+walk) ⇒ [<code>Cart</code>](#Cart)
     * [.toJSON()](#Cart+toJSON) ⇒ <code>String</code>
     * [.fromJSON(sJSON)](#Cart+fromJSON) ⇒ [<code>Cart</code>](#Cart)
@@ -645,13 +644,6 @@ You have to implement costs of payment on your own.
 <a name="Cart+ listener"></a>
 
 ### cart. listener : <code>Object</code>
-**Kind**: instance property of [<code>Cart</code>](#Cart)  
-
-* * *
-
-<a name="Cart+ familyConstructors"></a>
-
-### cart. familyConstructors : <code>Object</code>
 **Kind**: instance property of [<code>Cart</code>](#Cart)  
 
 * * *
