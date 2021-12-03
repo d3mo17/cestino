@@ -165,6 +165,17 @@
     var moduleAPI;
 
     /**
+     * Is passed data a number?
+     *
+     * @public
+     * @param   {*} n
+     * @returns {Boolean}
+     */
+    function _isNumber(n) {
+        return n === +n;
+    }
+
+    /**
      * Is passed data of type Integer?
      *
      * @public
@@ -172,7 +183,18 @@
      * @returns {Boolean}
      */
     function _isInt(n) {
-        return n === +n && n === (n|0);
+        return _isNumber(n) && n === (n|0);
+    }
+
+    /**
+     * Is passed data of type Float?
+     *
+     * @public
+     * @param   {*} n
+     * @returns {Boolean}
+     */
+    function _isFloat(n) {
+        return _isNumber(n) && n !== (n|0);
     }
 
     /**
@@ -229,12 +251,17 @@
      * Utilities used to check and modify basic data types.
      * 
      * @module Cestino/Util
+     * @borrows <anonymous>~_isNumber as isNumber
      * @borrows <anonymous>~_isInt as isInt
+     * @borrows <anonymous>~_isFloat as isFloat
      * @borrows <anonymous>~_isEmpty as isEmpty
      * @borrows <anonymous>~_lpad as lpad
+     * @borrows <anonymous>~_round as round
      */
     moduleAPI = {
+        isNumber: _isNumber,
         isInt: _isInt,
+        isFloat: _isFloat,
         isEmpty: _isEmpty,
         lpad: _lpad,
         round: _round

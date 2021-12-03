@@ -462,9 +462,27 @@ Utilities used to check and modify basic data types.
 
 
 * [Cestino/Util](#module_Cestino/Util)
+    * [.isNumber(n)](#module_Cestino/Util.isNumber) ⇒ <code>Boolean</code>
     * [.isInt(n)](#module_Cestino/Util.isInt) ⇒ <code>Boolean</code>
+    * [.isFloat(n)](#module_Cestino/Util.isFloat) ⇒ <code>Boolean</code>
     * [.isEmpty(val)](#module_Cestino/Util.isEmpty) ⇒ <code>Boolean</code>
     * [.lpad(str, width, padStr)](#module_Cestino/Util.lpad) ⇒ <code>String</code>
+    * [.round(number)](#module_Cestino/Util.round) ⇒ <code>Integer</code>
+
+
+* * *
+
+<a name="module_Cestino/Util.isNumber"></a>
+
+### Cestino/Util.isNumber(n) ⇒ <code>Boolean</code>
+Is passed data a number?
+
+**Kind**: static method of [<code>Cestino/Util</code>](#module_Cestino/Util)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| n | <code>\*</code> | 
 
 
 * * *
@@ -473,6 +491,21 @@ Utilities used to check and modify basic data types.
 
 ### Cestino/Util.isInt(n) ⇒ <code>Boolean</code>
 Is passed data of type Integer?
+
+**Kind**: static method of [<code>Cestino/Util</code>](#module_Cestino/Util)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| n | <code>\*</code> | 
+
+
+* * *
+
+<a name="module_Cestino/Util.isFloat"></a>
+
+### Cestino/Util.isFloat(n) ⇒ <code>Boolean</code>
+Is passed data of type Float?
 
 **Kind**: static method of [<code>Cestino/Util</code>](#module_Cestino/Util)  
 **Access**: public  
@@ -512,6 +545,21 @@ Pad a string on left side to a certain length with another string.
 | str | <code>String</code> | 
 | width | <code>Integer</code> | 
 | padStr | <code>String</code> | 
+
+
+* * *
+
+<a name="module_Cestino/Util.round"></a>
+
+### Cestino/Util.round(number) ⇒ <code>Integer</code>
+Other than `Math.round()`, this function rounds to nearest away from zero
+
+**Kind**: static method of [<code>Cestino/Util</code>](#module_Cestino/Util)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| number | <code>Number</code> | 
 
 
 * * *

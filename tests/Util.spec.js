@@ -1,10 +1,31 @@
 var Util = require('../src/Util')
 
 describe('Utilities for common use', function () {
+    it('should check numbers', function () {
+        expect(Util.isNumber(89)).toBe(true)
+        expect(Util.isNumber('89')).toBe(false)
+        expect(Util.isNumber(89.5)).toBe(true)
+    })
+
+    it('should check floats', function () {
+        expect(Util.isFloat(89)).toBe(false)
+        expect(Util.isFloat('89')).toBe(false)
+        expect(Util.isFloat(89.5)).toBe(true)
+    })
+
     it('should check integers', function () {
         expect(Util.isInt(89)).toBe(true)
         expect(Util.isInt('89')).toBe(false)
         expect(Util.isInt(89.5)).toBe(false)
+    })
+
+    it('should round to integer', function () {
+        expect(Util.round(89)).toBe(89)
+        expect(Util.round(89.499)).toBe(89)
+        expect(Util.round(89.5)).toBe(90)
+        expect(Util.round(-89)).toBe(-89)
+        expect(Util.round(-89.499)).toBe(-89)
+        expect(Util.round(-89.5)).toBe(-90)
     })
 
     it('should check emptiness', function () {
