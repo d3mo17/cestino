@@ -303,29 +303,29 @@
      * @constructor
      * @private
      * @global
-     * @param   {String} decimalSeperator
-     * @param   {String} thousandsSeperator
+     * @param   {String} decimalSeparator
+     * @param   {String} thousandsSeparator
      * @param   {Integer} decimalCount
      * @borrows <anonymous>~_format as format
      */
-    function PriceFormatter(decimalSeperator, thousandsSeperator, decimalCount) {
+    function PriceFormatter(decimalSeparator, thousandsSeparator, decimalCount) {
         decimalCount = decimalCount || 2;
-        thousandsSeperator = thousandsSeperator || '';
+        thousandsSeparator = thousandsSeparator || '';
         if ([2,3].indexOf(decimalCount) === -1) {
             throw new RangeError('The decimal count has to be 2 or 3!');
         }
-        if (['.',',','٫'].indexOf(decimalSeperator) === -1) {
+        if (['.',',','٫'].indexOf(decimalSeparator) === -1) {
             throw new RangeError(
-                ['"', decimalSeperator, '" is not a typical decimal seperator'].join('')
+                ['"', decimalSeparator, '" is not a typical decimal separator'].join('')
             );
         }
 
         /** @member {Integer} */
         this[' decimalCount'] = decimalCount;
         /** @member {String} */
-        this[' thousandsSeperator'] = thousandsSeperator;
+        this[' thousandsSeparator'] = thousandsSeparator;
         /** @member {String} */
-        this[' decimalSeperator'] = decimalSeperator;
+        this[' decimalSeparator'] = decimalSeparator;
     }
 
     /**
@@ -369,11 +369,11 @@
             throw new TypeError('Parameter int has to be an Int!');
         }
 
-        currencyValue = parseInt((int + '').slice(0, this[' decimalCount'] * -1));
+        currencyValue = parseInt((int + '').slice(0, this[' decimalCount'] * -1)) || 0;
 
         return [
-            _chunks(currencyValue, 3).join(this[' thousandsSeperator']),
-            this[' decimalSeperator'],
+            _chunks(currencyValue, 3).join(this[' thousandsSeparator']),
+            this[' decimalSeparator'],
             Util.lpad(int % Math.pow(10, this[' decimalCount']), this[' decimalCount'])
         ].join('');
     }
@@ -389,13 +389,13 @@
          * Creates an object to convert integer price to decimal price (e. g. cents to dollar/euro).
          * 
          * @alias   module:Cestino/PriceFormatter.create
-         * @param   {String} decimalSeperator
-         * @param   {String} thousandsSeperator
+         * @param   {String} decimalSeparator
+         * @param   {String} thousandsSeparator
          * @param   {Number} decimalCount
          * @returns {PriceFormatter}
          */
-        create: function (decimalSeperator, thousandsSeperator, decimalCount) {
-            return new PriceFormatter(decimalSeperator, thousandsSeperator, decimalCount);
+        create: function (decimalSeparator, thousandsSeparator, decimalCount) {
+            return new PriceFormatter(decimalSeparator, thousandsSeparator, decimalCount);
         }
     };
 }));

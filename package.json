@@ -1,7 +1,7 @@
 {
   "name": "cestino",
-  "title": "cestino",
-  "version": "3.1.0",
+  "title": "Cestino",
+  "version": "3.1.1",
   "description": "A basic shopping cart implementation in javascript.",
   "repository": {
     "type": "git",

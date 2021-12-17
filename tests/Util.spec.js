@@ -5,18 +5,30 @@ describe('Utilities for common use', function () {
         expect(Util.isNumber(89)).toBe(true)
         expect(Util.isNumber('89')).toBe(false)
         expect(Util.isNumber(89.5)).toBe(true)
+        expect(Util.isNumber([])).toBe(false)
+        expect(Util.isNumber({})).toBe(false)
+        expect(Util.isNumber(function () {})).toBe(false)
+        expect(Util.isNumber(NaN)).toBe(false)
     })
 
     it('should check floats', function () {
         expect(Util.isFloat(89)).toBe(false)
         expect(Util.isFloat('89')).toBe(false)
         expect(Util.isFloat(89.5)).toBe(true)
+        expect(Util.isFloat([])).toBe(false)
+        expect(Util.isFloat({})).toBe(false)
+        expect(Util.isFloat(function () {})).toBe(false)
+        expect(Util.isFloat(NaN)).toBe(false)
     })
 
     it('should check integers', function () {
         expect(Util.isInt(89)).toBe(true)
         expect(Util.isInt('89')).toBe(false)
         expect(Util.isInt(89.5)).toBe(false)
+        expect(Util.isInt([])).toBe(false)
+        expect(Util.isInt({})).toBe(false)
+        expect(Util.isInt(function () {})).toBe(false)
+        expect(Util.isInt(NaN)).toBe(false)
     })
 
     it('should round to integer', function () {

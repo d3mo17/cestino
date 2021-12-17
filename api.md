@@ -441,15 +441,15 @@ Formatting integers to decimal currency representation.
 
 <a name="module_Cestino/PriceFormatter.create"></a>
 
-### Cestino/PriceFormatter.create(decimalSeperator, thousandsSeperator, decimalCount) ⇒ [<code>PriceFormatter</code>](#PriceFormatter)
+### Cestino/PriceFormatter.create(decimalSeparator, thousandsSeparator, decimalCount) ⇒ [<code>PriceFormatter</code>](#PriceFormatter)
 Creates an object to convert integer price to decimal price (e. g. cents to dollar/euro).
 
 **Kind**: static method of [<code>Cestino/PriceFormatter</code>](#module_Cestino/PriceFormatter)  
 
 | Param | Type |
 | --- | --- |
-| decimalSeperator | <code>String</code> | 
-| thousandsSeperator | <code>String</code> | 
+| decimalSeparator | <code>String</code> | 
+| thousandsSeparator | <code>String</code> | 
 | decimalCount | <code>Number</code> | 
 
 
@@ -1353,11 +1353,11 @@ Returns the cart this shipping group belongs to.
 **Access**: private  
 
 * [PriceFormatter](#PriceFormatter) ℗
-    * [new PriceFormatter(decimalSeperator, thousandsSeperator, decimalCount)](#new_PriceFormatter_new)
+    * [new PriceFormatter(decimalSeparator, thousandsSeparator, decimalCount)](#new_PriceFormatter_new)
     * _instance_
         * [. decimalCount](#PriceFormatter+ decimalCount) : <code>Integer</code>
-        * [. thousandsSeperator](#PriceFormatter+ thousandsSeperator) : <code>String</code>
-        * [. decimalSeperator](#PriceFormatter+ decimalSeperator) : <code>String</code>
+        * [. thousandsSeparator](#PriceFormatter+ thousandsSeparator) : <code>String</code>
+        * [. decimalSeparator](#PriceFormatter+ decimalSeparator) : <code>String</code>
     * _static_
         * [.format(int)](#PriceFormatter.format) ⇒ <code>String</code> ℗
 
@@ -1366,14 +1366,14 @@ Returns the cart this shipping group belongs to.
 
 <a name="new_PriceFormatter_new"></a>
 
-### new PriceFormatter(decimalSeperator, thousandsSeperator, decimalCount)
+### new PriceFormatter(decimalSeparator, thousandsSeparator, decimalCount)
 Creates an object to convert integer price to decimal price (e. g. cents to dollar/euro).
 
 
 | Param | Type |
 | --- | --- |
-| decimalSeperator | <code>String</code> | 
-| thousandsSeperator | <code>String</code> | 
+| decimalSeparator | <code>String</code> | 
+| thousandsSeparator | <code>String</code> | 
 | decimalCount | <code>Integer</code> | 
 
 
@@ -1386,16 +1386,16 @@ Creates an object to convert integer price to decimal price (e. g. cents to doll
 
 * * *
 
-<a name="PriceFormatter+ thousandsSeperator"></a>
+<a name="PriceFormatter+ thousandsSeparator"></a>
 
-### priceFormatter. thousandsSeperator : <code>String</code>
+### priceFormatter. thousandsSeparator : <code>String</code>
 **Kind**: instance property of [<code>PriceFormatter</code>](#PriceFormatter)  
 
 * * *
 
-<a name="PriceFormatter+ decimalSeperator"></a>
+<a name="PriceFormatter+ decimalSeparator"></a>
 
-### priceFormatter. decimalSeperator : <code>String</code>
+### priceFormatter. decimalSeparator : <code>String</code>
 **Kind**: instance property of [<code>PriceFormatter</code>](#PriceFormatter)  
 
 * * *

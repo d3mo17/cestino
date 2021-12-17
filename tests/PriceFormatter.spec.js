@@ -4,6 +4,11 @@ const fm2 = Formatter.create(',', '.')
 const fm3 = Formatter.create('.', ',')
 
 describe('Test formatter for prices!', function () {
+    it('should format cents correctly', function () {
+        expect(fm.format(23)).toBe('0,23')
+        expect(fm3.format(17)).toBe('0.17')
+    })
+
     it('should format to german representation correctly', function () {
         expect(fm.format(123)).toBe('1,23')
         expect(fm.format(45123)).toBe('451,23')

@@ -217,7 +217,7 @@ Example:
 
 ### Development
 
-If you want to distribute your changes in the 'dist'-directory, you can use gulp:
+If you want to distribute your changes in the 'dist'-directory, you can use npm:
 
 ```shell
     $ npm run build
