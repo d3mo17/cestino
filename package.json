@@ -1,7 +1,7 @@
 {
   "name": "cestino",
   "title": "Cestino",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "A basic shopping cart implementation in javascript.",
   "repository": {
     "type": "git",
@@ -34,5 +34,5 @@
   "bugs": {
     "url": "https://github.com/d3mo17/cestino/issues"
   },
-  "homepage": "https://github.com/d3mo17/cestino#readme"
+  "homepage": "https://github.com/d3mo17/cestino"
 }
