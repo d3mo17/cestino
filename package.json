@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "jest": "^25.2.7",
-    "jsdoc-to-markdown": "^5.0.3",
+    "jsdoc-to-markdown": "^8.0.0",
     "requirejs": "^2.3.6",
     "uglify-js": "^3.8.1"
   },
