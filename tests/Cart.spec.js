@@ -201,12 +201,6 @@ function cartTest (Cart, Repo) {
                 done();
             });
             cart.fromJSON(JSON.stringify(testObject4JSON));
-
-            // exit after 3 seconds
-            window.setTimeout(function () {
-                expect('Cart should be updated').toBe('valid');
-                done();
-            }, 3000);
         });
 
         it('extend product objects', function () {
