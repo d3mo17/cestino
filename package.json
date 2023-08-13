@@ -1,7 +1,7 @@
 {
   "name": "cestino",
   "title": "Cestino",
-  "version": "3.1.4",
+  "version": "3.1.5",
   "description": "A basic shopping cart implementation in javascript.",
   "repository": {
     "type": "git",
@@ -16,6 +16,7 @@
     "test": "test"
   },
   "main": "./src/Cart.js",
+  "browser": "dist/grafico-ql.min.js",
   "dependencies": {
     "atomicjs": "^4.4.1"
   },
